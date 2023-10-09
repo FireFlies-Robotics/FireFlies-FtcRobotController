@@ -7,10 +7,14 @@ Following this guidelines will make sure that we can all understand and maintain
 
 Working with git and GitHub ensures that we all are on the same page, back up our work and organize our code.
 
-Please follow these guidelines to use git and GitHub:
-* Check for updates at the beginning of every session and merge from the root if there is anything new
-* Make a commit after finishing a feature
-* Push updates at the end of every session
+Please follow these steps whenever starting a coding session:
+1. Check for updates at the beginning of every session and merge from the root if there is anything new
+2. Make a commit after finishing a feature
+3. Push updates at the end of every session
+
+Follow this rules additionally:
+* *Never work directly in master* or a category branch
+* Make your own branches, *never work in somebody else's branch*
 
 ### Merging Branches
 Merging branches is a critical action. **Please follow this steps before merging**:
