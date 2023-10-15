@@ -19,7 +19,7 @@ Follow this rules additionally:
 ### Merging Branches
 Merging branches is a critical action. **Please follow this steps before merging**:
 1. Merge the root branch into your feature branch
-2. Take a look over your code. check that it qualifies for [Writing Code](#writing-code), [Naming Variables, Classes and Methods](#naming-variables-classes-and-methods-functions) and [Writing Comments](#writing-comments)
+2. Take a look over your code. check that it qualifies for [Writing Code](#writing-code), [Naming Variables, Classes and Methods](#naming-variables-classes-and-methods-functions), [Writing Comments](#writing-comments) and [Testing](#testing)
 3. Test your code and **make sure it runs flawlessly**
 4. Merge your feature branch into its root branch
 5. Push the root branch to github
@@ -29,7 +29,7 @@ Merging branches is a critical action. **Please follow this steps before merging
 
 ## Writing Code
 
-To make sure that we all can understand each others code, please follow [the guidelines for naming variables, classes and methods](#naming-variables-classes-and-methods-functions) and [the guidelines for writing comments](#writing-comments). **Make sure to space out different sections of code**.
+To make sure that we all can understand each others code, please follow [the guidelines for naming variables, classes and methods](#naming-variables-classes-and-methods-functions) and [the guidelines for writing comments](#writing-comments). **Make sure to space out different sections of code**. Also check out [Testing](#testing) for testing your code.
 
 ### Naming Variables, Classes and Methods (functions)
 
@@ -78,6 +78,14 @@ System.out.println("Imported usernames from file");
 ```java
 //FIXME Robot goes backwards when using turbo
 ```
+
+### Testing
+
+Testing your code is crucial to make sure that your can integrate well with other code and not having bugs on the stage.
+
+Follow this rules to ensure that and prevent conflicts:
+* Make your own OpModes, **never work in the main OpMode**
+* Check every functionality of your code. Your code is being used not only by you
 
 ### ___*If you want to suggest a change in the guidelines, please suggest it during a meeting___
 
