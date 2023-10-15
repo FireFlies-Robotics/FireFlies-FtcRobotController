@@ -13,8 +13,8 @@ Please follow these steps whenever starting a coding session:
 3. Push updates at the end of every session
 
 Follow this rules additionally:
-* *Never work directly in master* or a category branch
-* Make your own branches, *never work in somebody else's branch*
+* **Never work directly in master** or a category branch
+* Make your own branches, **never work in somebody else's branch**
 
 ### Merging Branches
 Merging branches is a critical action. **Please follow this steps before merging**:
