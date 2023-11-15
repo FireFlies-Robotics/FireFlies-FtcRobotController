@@ -47,6 +47,7 @@ public class Wheels {
         return new double[]{fr,br,fl,bl};
 
     }
+
     public void driveByJoystickRobotOriented(double x, double y, double rot) {
         double[] wheelPower = calculateMecanum(x ,y ,rot);
         double fr = wheelPower[0];
@@ -84,5 +85,27 @@ public class Wheels {
         backRight.setPower(br);
         frontLeft.setPower(fl);
         backLeft.setPower(bl);
+    }
+
+    public void driveByJoystickFieldOriented(double x, double y, double rot, double yaw) {
+        // Rotate the movement direction counter to the bot's rotation
+        double rotX = x * Math.cos(-yaw) - y * Math.sin(-yaw);
+        double rotY = x * Math.sin(-yaw) + y * Math.cos(-yaw);
+
+        rotX = rotX * 1.1;  // Counteract imperfect strafing
+
+        // Denominator is the largest motor power (absolute value) or 1
+        // This ensures all the powers maintain the same ratio,
+        // but only if at least one is out of the range [-1, 1]
+        double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rot), 1);
+        double frontLeftPower = (rotY + rotX + rot) / denominator;
+        double backLeftPower = (rotY - rotX + rot) / denominator;
+        double frontRightPower = (rotY - rotX - rot) / denominator;
+        double backRightPower = (rotY + rotX - rot) / denominator;
+
+        frontLeft.setPower(frontLeftPower);
+        backLeft.setPower(backLeftPower);
+        frontRight.setPower(frontRightPower);
+        backRight.setPower(backRightPower);
     }
 }
