@@ -47,7 +47,7 @@ public class Wheels {
         return new double[]{fr,br,fl,bl};
 
     }
-    public void driveByJoystick(double x, double y, double rot) {
+    public void driveByJoystickRobotOriented(double x, double y, double rot) {
         double[] wheelPower = calculateMecanum(x ,y ,rot);
         double fr = wheelPower[0];
         double br = wheelPower[1];
