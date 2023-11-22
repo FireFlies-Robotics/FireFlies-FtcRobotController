@@ -1,18 +1,21 @@
-package org.firstinspires.ftc.teamcode.UnloadSystem;
+package org.firstinspires.ftc.teamcode.transfer;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
-public class UnloadSystem {
+
+public class Elevator {
     private final LinearOpMode opMode;
 
     DcMotor leftElevatorMotor;
     DcMotor rightElevatorMotor;
 
-    public UnloadSystem(LinearOpMode opMode) {
+    public Elevator(LinearOpMode opMode) {
         this.opMode = opMode;
     }
 
-    public void initUnlodSystem() {
+    public void initElevator() {
         leftElevatorMotor = opMode.hardwareMap.get(DcMotor.class, "leftElevatorMotor");
         rightElevatorMotor = opMode.hardwareMap.get(DcMotor.class, "rightElevatorMotor");
 
@@ -32,4 +35,3 @@ public class UnloadSystem {
 
     }
 }
-
