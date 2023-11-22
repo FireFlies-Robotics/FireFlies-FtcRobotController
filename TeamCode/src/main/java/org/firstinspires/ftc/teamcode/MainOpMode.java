@@ -1,40 +1,20 @@
-/* Copyright (c) 2017 FIRST. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted (subject to the limitations in the disclaimer below) provided that
- * the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this list
- * of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of FIRST nor the names of its contributors may be used to endorse or
- * promote products derived from this software without specific prior written permission.
- *
- * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
- * LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.teamcode.transfer.Arm;
+import org.firstinspires.ftc.teamcode.transfer.Claw;
+import org.firstinspires.ftc.teamcode.transfer.Elevator;
+import org.firstinspires.ftc.teamcode.transfer.Intake;
+
 
 @TeleOp(name="Main Linear OpMode", group="Linear OpMode")
 //Uncomment the line below to disable this op
@@ -44,13 +24,41 @@ public class MainOpMode extends LinearOpMode {
 
     // Time that runs since the program began running
     private ElapsedTime runtime = new ElapsedTime();
+    Arm arm;
+    Claw claw;
+    Elevator elevator;
+    Intake intake;
 
+    Wheels wheels; // Declare the wheels class to control the wheels
+
+    IMU imu; // Declare class for getting robot angles
     @Override
     public void runOpMode() {
         // Runs when init is pressed. Initialize variables and pregame logic here
+        arm.initArm();
+        claw.initArm();
+        elevator.initElevator();
+        intake.initIntake();
+
+
+        // Retrieve the IMU from the hardware map
+        imu = hardwareMap.get(IMU.class, "imu");
+        // Adjust the orientation parameters to match your robot
+        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+                RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
+                RevHubOrientationOnRobot.UsbFacingDirection.UP));
+        // Without this, the REV Hub's orientation is assumed to be logo up / USB forward
+        imu.initialize(parameters);
+
+        wheels = new Wheels(this, imu);
+
+        telemetry.addData("Status", "Initialized");
+        telemetry.addData("Speed", "Waiting to start");
+        telemetry.update();
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -58,6 +66,53 @@ public class MainOpMode extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP). Logic once game starts here
         while (opModeIsActive()) {
+
+            if (gamepad2.x) {
+                arm.closeArm();
+            }
+            if (gamepad2.triangle){
+                arm.openArm();
+            }
+
+            if (gamepad2.circle) {
+                claw.closeClaw();
+            }
+            if (gamepad2.square){
+                claw.openClaw();
+            }
+
+            elevator.moveElevator(gamepad2.right_trigger);
+            elevator.moveElevator(-gamepad2.left_trigger);
+
+            if (gamepad2.right_trigger == 0 && gamepad2.left_trigger == 0){
+                elevator.stopElevator();
+            }
+
+            // Reset the robot's default angle with options button
+            if (gamepad1.options) {
+                imu.resetYaw();
+            }
+
+            // Slow the robot down when the left bumber is pressed
+            if (gamepad1.left_bumper) {
+                wheels.setMaxSpeed(.5);
+            } else {
+                wheels.setMaxSpeed(1);
+            }
+
+            if(gamepad1.right_bumper){
+                intake.intakeSpeedUp();
+            }
+            if(gamepad1.left_bumper){
+                intake.intakeSpeedDown();
+            }
+            // Move robot by controller 1
+            wheels.driveByJoystickFieldOriented(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
+
+            // Show data on driver station
+            telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.addData("Speed", wheels.getMaxSpeed()*100 + "%");
+            telemetry.update();
 
             // Show data on driver station
             telemetry.addData("Status", "Run Time: " + runtime.toString());
