@@ -27,6 +27,10 @@ public class Wheels {
     private final LinearOpMode opMode;
     private final IMU imu;
 
+    public double getMaxSpeed() {
+        return maxSpeed;
+    }
+
     double maxSpeed = 1;
 
     public Wheels(LinearOpMode opMode, IMU imu) {
@@ -39,6 +43,11 @@ public class Wheels {
         backRight = opMode.hardwareMap.get(DcMotor.class, "BackRight");
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public void setMaxSpeed(double maxSpeed) {

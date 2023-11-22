@@ -17,7 +17,6 @@ public class FieldOrientedWheelsTest extends LinearOpMode {
     Wheels wheels; // Declare the wheels class to control the wheels
 
     IMU imu; // Declare class for getting robot angles
-    double forceMultiplier;
 
     // Time that runs since the program began running
     private ElapsedTime runtime = new ElapsedTime();
@@ -53,18 +52,17 @@ public class FieldOrientedWheelsTest extends LinearOpMode {
                 imu.resetYaw();
             }
 
-            if (gamepad1.left_trigger > .01)
-                forceMultiplier = .6 - gamepad1.left_trigger*.4;
-            else if (gamepad1.right_trigger > .01)
-                forceMultiplier = .6 + gamepad1.right_trigger*.3;
-            else
-                forceMultiplier = .6;
+            if (gamepad1.left_bumper) {
+                wheels.setMaxSpeed(.5);
+            } else {
+                wheels.setMaxSpeed(1);
+            }
 
-            wheels.driveByJoystickFieldOriented(gamepad1.left_stick_x*forceMultiplier, -gamepad1.left_stick_y*forceMultiplier, gamepad1.right_stick_x*forceMultiplier);
+            wheels.driveByJoystickFieldOriented(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
 
             // Show data on driver station
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Speed", forceMultiplier*100 + "%");
+            telemetry.addData("Speed", wheels.getMaxSpeed()*100 + "%");
             telemetry.update();
         }
     }
