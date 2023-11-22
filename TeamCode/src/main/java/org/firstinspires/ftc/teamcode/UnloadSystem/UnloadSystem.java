@@ -1,28 +1,35 @@
 package org.firstinspires.ftc.teamcode.UnloadSystem;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@TeleOp(name = "UnloadSystem")
-public class UnloadSystem extends OpMode {
+public class UnloadSystem {
+    private final LinearOpMode opMode;
 
-        DcMotor motor;
-        @Override
-        public void init() {
-            motor = hardwareMap.get(DcMotor.class, "motor");
-            telemetry.addData("Hardware: ", "initialized");
+    DcMotor leftElevatorMotor;
+    DcMotor rightElevatorMotor;
 
+    public UnloadSystem(LinearOpMode opMode) {
+        this.opMode = opMode;
+    }
+
+    public void initUnlodSystem() {
+        leftElevatorMotor = opMode.hardwareMap.get(DcMotor.class, "leftElevatorMotor");
+        rightElevatorMotor = opMode.hardwareMap.get(DcMotor.class, "rightElevatorMotor");
+
+        opMode.telemetry.addData("Hardware: ", "initialized");
 
 
     }
 
-    @Override
-    public void loop() {
+    public void moveElevator(float motorPower) {
 
-        float x = gamepad1.right_trigger;
-        if (gamepad1.right_trigger > 0){
-                motor.setPower(x);
-            }
-            motor.setPower(0);
+        leftElevatorMotor.setPower(motorPower);
+        rightElevatorMotor.setPower(motorPower);
+    }
+    public void stopElevator(){
+        leftElevatorMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightElevatorMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
     }
 }
+
