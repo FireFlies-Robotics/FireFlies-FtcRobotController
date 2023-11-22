@@ -25,7 +25,6 @@ public class FieldOrientedWheelsTest extends LinearOpMode {
     public void runOpMode() {
         // Runs when init is pressed. Initialize variables and pregame logic here
 
-
         // Retrieve the IMU from the hardware map
         imu = hardwareMap.get(IMU.class, "imu");
         // Adjust the orientation parameters to match your robot
@@ -48,16 +47,19 @@ public class FieldOrientedWheelsTest extends LinearOpMode {
         // run until the end of the match (driver presses STOP). Logic once game starts here
         while (opModeIsActive()) {
 
+            // Reset the robot's default angle with options button
             if (gamepad1.options) {
                 imu.resetYaw();
             }
 
+            // Slow the robot down when the left bumber is pressed
             if (gamepad1.left_bumper) {
                 wheels.setMaxSpeed(.5);
             } else {
                 wheels.setMaxSpeed(1);
             }
 
+            // Move robot by controller 1
             wheels.driveByJoystickFieldOriented(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
 
             // Show data on driver station

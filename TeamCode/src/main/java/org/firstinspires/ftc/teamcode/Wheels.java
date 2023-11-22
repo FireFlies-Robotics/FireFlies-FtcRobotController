@@ -1,8 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import static java.lang.Math.abs;
-import static java.lang.Math.max;
-
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -24,18 +21,24 @@ public class Wheels {
     private final DcMotor backLeft;
     private final DcMotor backRight;
 
-    private final LinearOpMode opMode;
-    private final IMU imu;
+    private final LinearOpMode opMode; // The opmode used to get the wheels
+    private final IMU imu; // Gyros used to get the robots rotation
+
+    double maxSpeed = 1;
 
     public double getMaxSpeed() {
         return maxSpeed;
     }
 
-    double maxSpeed = 1;
+    public void setMaxSpeed(double maxSpeed) {
+        this.maxSpeed = maxSpeed;
+    }
 
     public Wheels(LinearOpMode opMode, IMU imu) {
         this.opMode = opMode;
         this.imu = imu;
+
+        // Getting the wheel motors and setting them up
 
         frontLeft = opMode.hardwareMap.get(DcMotor.class, "FrontLeft");
         frontRight = opMode.hardwareMap.get(DcMotor.class, "FrontRight");
@@ -50,67 +53,10 @@ public class Wheels {
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
-    public void setMaxSpeed(double maxSpeed) {
-        this.maxSpeed = maxSpeed;
-    }
-    public double[] calculateMecanum(double x, double y, double rot){
-        double fr = y - x - rot;
-        double br = y + x - rot;
-        double fl = y + x + rot;
-        double bl = y - x + rot;
-        opMode.telemetry.addData("Front Position",  "%7d :%7d",
-                frontRight.getCurrentPosition(),
-                frontLeft.getCurrentPosition());
-        opMode.telemetry.addData("Back Position",  "%7d :%7d",
-                backRight.getCurrentPosition(),
-                backLeft.getCurrentPosition());
-        return new double[]{fr,br,fl,bl};
-
-    }
-
-    public void driveByJoystickRobotOriented(double x, double y, double rot) {
-        double[] wheelPower = calculateMecanum(x ,y ,rot);
-        double fr = wheelPower[0];
-        double br = wheelPower[1];
-        double fl = wheelPower[2];
-        double bl = wheelPower[3];
-
-        double norm = max(max(abs(fr), abs(br)), max(abs(fr), abs(br)));
-
-        if (norm > 1) {
-            fr /= norm;
-            br /= norm;
-            fl /= norm;
-            bl /= norm;
-        }
-
-        if (opMode.gamepad1.left_stick_button || opMode.gamepad1.left_trigger>.4) {
-            fr *= .25;
-            br *= .25;
-            fl *= .25;
-            bl *= .25;
-        } else if (opMode.gamepad1.right_trigger>.4) {
-            fr *= .8;
-            br *= .8;
-            fl *= .8;
-            bl *= .8;
-        } else {
-            fr *= .6;
-            br *= .6;
-            fl *= .6;
-            bl *= .6;
-        }
-
-        frontRight.setPower(fr);
-        backRight.setPower(br);
-        frontLeft.setPower(fl);
-        backLeft.setPower(bl);
-    }
-
     public void driveByJoystickFieldOriented(double x, double y, double rot) {
-        double yaw = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        double yaw = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS); // Get the yaw angle of the robot
 
-        // Rotate the movement direction counter to the bot's rotation
+        // Rotate the movement direction counter to the robot's rotation
         double rotX = x * Math.cos(-yaw) - y * Math.sin(-yaw);
         double rotY = x * Math.sin(-yaw) + y * Math.cos(-yaw);
 
@@ -124,6 +70,8 @@ public class Wheels {
         double backLeftPower = (rotY - rotX + rot) / denominator;
         double frontRightPower = (rotY - rotX - rot) / denominator;
         double backRightPower = (rotY + rotX - rot) / denominator;
+
+        // Applying forces to wheel motors
 
         frontLeft.setPower(frontLeftPower*maxSpeed);
         backLeft.setPower(backLeftPower*maxSpeed);
