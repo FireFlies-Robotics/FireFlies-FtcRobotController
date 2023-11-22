@@ -32,11 +32,9 @@ package org.firstinspires.ftc.teamcode.testing;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.LoadSystem.LoadSystem;
+import org.firstinspires.ftc.teamcode.transfer.Intake;
+//import org.firstinspires.ftc.teamcode.UnloadSystem.UnloadSystem;
 
 
 /*
@@ -69,13 +67,13 @@ import org.firstinspires.ftc.teamcode.LoadSystem.LoadSystem;
 
 @TeleOp(name="LoadSystemTesting", group="Linear OpMode")
 @Disabled
-public class LoadSystemTesting extends LinearOpMode {
+public class IntakeTesting extends LinearOpMode {
 
-    LoadSystem loadSystem = new LoadSystem();
-
+    Intake intake = new Intake( this);
+//    UnloadSystem unloadSystem = new UnloadSystem(this);
     @Override
     public void runOpMode() {
-        loadSystem.initLoadSystem();
+        intake.initIntake();
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.update();
@@ -86,10 +84,10 @@ public class LoadSystemTesting extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             if(gamepad1.right_bumper){
-                loadSystem.intakeSpeedUp();
+                intake.intakeSpeedUp();
             }
             if(gamepad1.left_bumper){
-                loadSystem.intakeSpeedDown();
+                intake.intakeSpeedDown();
             }
         }
 
