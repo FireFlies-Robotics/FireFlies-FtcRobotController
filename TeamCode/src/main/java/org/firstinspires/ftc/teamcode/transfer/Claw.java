@@ -14,7 +14,7 @@ public class Claw {
     final private float CLAW_CLOSED_POSITION = 0;
     final private float CLAW_OPEN_POSITION = 1;
 
-    public void initClaw(){
+    public void initArm(){
         rightClawServo =  opMode.hardwareMap.get(Servo.class, "rightClawServo");
         leftClawServo = opMode.hardwareMap.get(Servo.class, "leftClawServo");
 

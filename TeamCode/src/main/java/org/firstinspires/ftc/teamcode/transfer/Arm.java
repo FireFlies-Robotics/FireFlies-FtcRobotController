@@ -28,7 +28,7 @@ public class Arm {
         leftArmServo.setPosition(ARM_CLOSED_POSITION);
     }
 
-    public void openClaw(){
+    public void openArm(){
         rightArmServo.setPosition(ARM_OPEN_POSITION);
         leftArmServo.setPosition(ARM_OPEN_POSITION);
     }
