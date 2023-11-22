@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Wheels;
 
 @TeleOp(name = "Field Oriented Wheels Test", group = "Test")
@@ -27,7 +26,6 @@ public class FieldOrientedWheelsTest extends LinearOpMode {
     public void runOpMode() {
         // Runs when init is pressed. Initialize variables and pregame logic here
 
-        wheels = new Wheels(this);
 
         // Retrieve the IMU from the hardware map
         imu = hardwareMap.get(IMU.class, "imu");
@@ -37,6 +35,8 @@ public class FieldOrientedWheelsTest extends LinearOpMode {
                 RevHubOrientationOnRobot.UsbFacingDirection.UP));
         // Without this, the REV Hub's orientation is assumed to be logo up / USB forward
         imu.initialize(parameters);
+
+        wheels = new Wheels(this, imu);
 
         telemetry.addData("Status", "Initialized");
         telemetry.addData("Speed", "Waiting to start");
@@ -60,7 +60,7 @@ public class FieldOrientedWheelsTest extends LinearOpMode {
             else
                 forceMultiplier = .6;
 
-            wheels.driveByJoystickFieldOriented(gamepad1.left_stick_x*forceMultiplier, -gamepad1.left_stick_y*forceMultiplier, gamepad1.right_stick_x*forceMultiplier, imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
+            wheels.driveByJoystickFieldOriented(gamepad1.left_stick_x*forceMultiplier, -gamepad1.left_stick_y*forceMultiplier, gamepad1.right_stick_x*forceMultiplier);
 
             // Show data on driver station
             telemetry.addData("Status", "Run Time: " + runtime.toString());

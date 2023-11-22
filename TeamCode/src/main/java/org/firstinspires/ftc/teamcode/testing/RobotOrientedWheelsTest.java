@@ -21,7 +21,7 @@ public class RobotOrientedWheelsTest extends LinearOpMode {
     public void runOpMode() {
         // Runs when init is pressed. Initialize variables and pregame logic here
 
-        wheels = new Wheels(this);
+        wheels = new Wheels(this, null);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();

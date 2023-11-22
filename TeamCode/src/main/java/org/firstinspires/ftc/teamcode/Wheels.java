@@ -6,6 +6,9 @@ import static java.lang.Math.max;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.IMU;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class Wheels {
 
@@ -22,9 +25,13 @@ public class Wheels {
     private final DcMotor backRight;
 
     private final LinearOpMode opMode;
+    private final IMU imu;
 
-    public Wheels(LinearOpMode opMode) {
+    double maxSpeed = 1;
+
+    public Wheels(LinearOpMode opMode, IMU imu) {
         this.opMode = opMode;
+        this.imu = imu;
 
         frontLeft = opMode.hardwareMap.get(DcMotor.class, "FrontLeft");
         frontRight = opMode.hardwareMap.get(DcMotor.class, "FrontRight");
@@ -32,6 +39,10 @@ public class Wheels {
         backRight = opMode.hardwareMap.get(DcMotor.class, "BackRight");
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+    }
+
+    public void setMaxSpeed(double maxSpeed) {
+        this.maxSpeed = maxSpeed;
     }
     public double[] calculateMecanum(double x, double y, double rot){
         double fr = y - x - rot;
@@ -87,7 +98,9 @@ public class Wheels {
         backLeft.setPower(bl);
     }
 
-    public void driveByJoystickFieldOriented(double x, double y, double rot, double yaw) {
+    public void driveByJoystickFieldOriented(double x, double y, double rot) {
+        double yaw = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+
         // Rotate the movement direction counter to the bot's rotation
         double rotX = x * Math.cos(-yaw) - y * Math.sin(-yaw);
         double rotY = x * Math.sin(-yaw) + y * Math.cos(-yaw);
@@ -103,9 +116,9 @@ public class Wheels {
         double frontRightPower = (rotY - rotX - rot) / denominator;
         double backRightPower = (rotY + rotX - rot) / denominator;
 
-        frontLeft.setPower(frontLeftPower);
-        backLeft.setPower(backLeftPower);
-        frontRight.setPower(frontRightPower);
-        backRight.setPower(backRightPower);
+        frontLeft.setPower(frontLeftPower*maxSpeed);
+        backLeft.setPower(backLeftPower*maxSpeed);
+        frontRight.setPower(frontRightPower*maxSpeed);
+        backRight.setPower(backRightPower*maxSpeed);
     }
 }
