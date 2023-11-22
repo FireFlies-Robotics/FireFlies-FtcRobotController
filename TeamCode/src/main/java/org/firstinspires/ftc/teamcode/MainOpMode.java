@@ -29,21 +29,18 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.LoadSystem.LoadSystem;
+import org.firstinspires.ftc.teamcode.transfer.Intake;
 
 @TeleOp(name="Main Linear OpMode", group="Linear OpMode")
 //Uncomment the line below to disable this op
 //@Disabled
 public class MainOpMode extends LinearOpMode {
     // Declare variables you will be using throughout this class here
-    LoadSystem loadSystem;
+    Intake intake;
 
     // Time that runs since the program began running
     private ElapsedTime runtime = new ElapsedTime();
@@ -55,7 +52,7 @@ public class MainOpMode extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        loadSystem = new LoadSystem(this);
+        intake = new Intake(this);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -65,10 +62,10 @@ public class MainOpMode extends LinearOpMode {
         while (opModeIsActive()) {
 
             if(gamepad2.right_bumper){
-                loadSystem.intakeSpeedUp();
+                intake.intakeSpeedUp();
             }
             if(gamepad2.left_bumper){
-                loadSystem.intakeSpeedDown();
+                intake.intakeSpeedDown();
             }
             // Show data on driver station
             telemetry.addData("Status", "Run Time: " + runtime.toString());
