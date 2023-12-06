@@ -46,9 +46,14 @@ public class ExampleVisionPortalOpMode extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()) {
+            visionPortal.resumeStreaming();
+            visionPortal.resumeLiveView();
+
             for (AprilTagDetection tag : aprilTagProcessor.getDetections()) {
-                //TODO Tag stuff
+                telemetry.addLine(String.valueOf(tag.id));
             }
+
+            telemetry.update();
         }
 
         // Save more CPU resources when camera is no longer needed.
