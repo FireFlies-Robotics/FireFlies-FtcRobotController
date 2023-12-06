@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.transfer.Arm;
 @TeleOp(name="ArmTesting", group="Linear OpMode")
 @Disabled
 public class ArmTesting extends LinearOpMode {
+
     Arm arm;
     // Declare OpMode members.
 

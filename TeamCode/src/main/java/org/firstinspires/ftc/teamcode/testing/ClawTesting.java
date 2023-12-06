@@ -5,18 +5,21 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.transfer.Claw;
+import org.firstinspires.ftc.teamcode.transfer.Intake;
 
 @TeleOp(name="ClawTesting", group="Linear OpMode")
-    @Disabled
+//    @Disabled
     public class ClawTesting extends LinearOpMode {
-        Claw claw;
+    Claw claw = new Claw( this);
+
+
         // Declare OpMode members.
 
         @Override
         public void runOpMode() {
-            claw.initArm();
-
-            while (opModeIsActive()) {
+            claw.initClaw();
+            waitForStart();
+            while (opModeIsActive() && !isStopRequested()) {
 
                 if (gamepad2.circle) {
                     claw.closeClaw();

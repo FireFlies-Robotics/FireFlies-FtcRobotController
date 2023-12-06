@@ -11,12 +11,12 @@ public class Claw {
         this.opMode = opMode;
     }
 
-    final private float CLAW_CLOSED_POSITION = 0;
-    final private float CLAW_OPEN_POSITION = 1;
+    final private float CLAW_CLOSED_POSITION = 1;
+    final private float CLAW_OPEN_POSITION = 0;
 
-    public void initArm(){
-        rightClawServo =  opMode.hardwareMap.get(Servo.class, "rightClawServo");
-        leftClawServo = opMode.hardwareMap.get(Servo.class, "leftClawServo");
+    public void initClaw(){
+        rightClawServo =  opMode.hardwareMap.get(Servo.class, "rightClawServo"); //1
+        leftClawServo = opMode.hardwareMap.get(Servo.class, "leftClawServo"); // 0
 
         rightClawServo.setDirection(Servo.Direction.REVERSE); //todo check which servo needs to be reversed
         closeClaw();

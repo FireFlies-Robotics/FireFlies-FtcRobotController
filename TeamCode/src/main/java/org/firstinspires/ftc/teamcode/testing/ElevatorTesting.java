@@ -16,7 +16,7 @@ public class ElevatorTesting extends LinearOpMode {
     @Override
     public void runOpMode() {
         elevator.initElevator();
-
+        waitForStart();
         while (opModeIsActive()) {
             elevator.moveElevator(gamepad2.right_trigger);
             elevator.moveElevator(-gamepad2.left_trigger);
