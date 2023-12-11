@@ -29,10 +29,13 @@
 
 package org.firstinspires.ftc.teamcode.eocv_testing;
 
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.IMU;
+
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -84,6 +87,9 @@ public class ExampleVisionPortalOpMode extends LinearOpMode {
      */
     private VisionPortal visionPortal;
 
+    IMU imu;
+    AutoWheels autoWheels;
+
     @Override
     public void runOpMode() {
 
@@ -104,11 +110,28 @@ public class ExampleVisionPortalOpMode extends LinearOpMode {
                 telemetry.update();
 
                 // Save CPU resources; can resume streaming when needed.
-//                if (gamepad1.dpad_down) {
-//                    visionPortal.stopStreaming();
-//                } else if (gamepad1.dpad_up) {
-//                    visionPortal.resumeStreaming();
-//                }
+                if (gamepad1.dpad_down) {
+                    visionPortal.stopStreaming();
+                } else if (gamepad1.dpad_up) {
+                    visionPortal.resumeStreaming();
+                }
+                autoWheels.rotate(0);
+                for (AprilTagDetection tag : aprilTag.getDetections()) {
+                    if (tag.id != 1) continue;
+
+                    double centerX = tag.center.x;
+
+                    telemetry.addLine("Center X: " + centerX);
+
+                    if (320 > centerX) {
+                        telemetry.addLine("Left");
+                        autoWheels.rotate(-.5);
+                    } else {
+                        telemetry.addLine("Right");
+                        autoWheels.rotate(.5);
+                        autoWheels.rotate(.5);
+                    }
+                }
 
                 // Share the CPU.
                 sleep(20);
@@ -124,6 +147,16 @@ public class ExampleVisionPortalOpMode extends LinearOpMode {
      * Initialize the AprilTag processor.
      */
     private void initAprilTag() {
+
+        imu = hardwareMap.get(IMU.class, "imu");
+        // Adjust the orientation parameters to match your robot
+        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+                RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
+                RevHubOrientationOnRobot.UsbFacingDirection.UP));
+        // Without this, the REV Hub's orientation is assumed to be logo up / USB forward
+        imu.initialize(parameters);
+
+        autoWheels = new AutoWheels(this, imu);
 
         // Create the AprilTag processor.
         aprilTag = new AprilTagProcessor.Builder()
