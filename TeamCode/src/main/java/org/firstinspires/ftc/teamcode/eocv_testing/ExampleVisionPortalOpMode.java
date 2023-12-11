@@ -115,23 +115,44 @@ public class ExampleVisionPortalOpMode extends LinearOpMode {
                 } else if (gamepad1.dpad_up) {
                     visionPortal.resumeStreaming();
                 }
-                autoWheels.rotate(0);
+
+                boolean match = false;
+
+                double rotation = 0;
+                double forwards = 0;
+
                 for (AprilTagDetection tag : aprilTag.getDetections()) {
                     if (tag.id != 1) continue;
 
+                    match = true;
                     double centerX = tag.center.x;
 
                     telemetry.addLine("Center X: " + centerX);
 
+//                    if (320 > centerX) {
+//                        telemetry.addLine("Left");
+//                        autoWheels.rotate(-.5);
+//                    } else {
+//                        telemetry.addLine("Right");
+//                        autoWheels.rotate(.5);
+//                    }
+
+//                    if (tag.ftcPose.y > 70 && tag.ftcPose.y < 300) autoWheels.forwards();
+
+                    //FIXME Robot does not turn
+
                     if (320 > centerX) {
                         telemetry.addLine("Left");
-                        autoWheels.rotate(-.5);
+                        rotation = -.5;
                     } else {
                         telemetry.addLine("Right");
-                        autoWheels.rotate(.5);
-                        autoWheels.rotate(.5);
+                        rotation = .5;
                     }
+
+                    if (tag.ftcPose.y > 70 && tag.ftcPose.y < 300) forwards = .7;
                 }
+
+                if (!match) autoWheels.operate(forwards, rotation);
 
                 // Share the CPU.
                 sleep(20);
