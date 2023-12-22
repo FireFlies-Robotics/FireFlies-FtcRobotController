@@ -19,6 +19,9 @@ public class Elevator {
         leftElevatorMotor = opMode.hardwareMap.get(DcMotor.class, "leftElevatorMotor");
         rightElevatorMotor = opMode.hardwareMap.get(DcMotor.class, "rightElevatorMotor");
 
+        leftElevatorMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightElevatorMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         opMode.telemetry.addData("Hardware: ", "initialized");
 
 
@@ -34,4 +37,14 @@ public class Elevator {
         rightElevatorMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
     }
+    public void setElevatorDown(){
+        leftElevatorMotor.setTargetPosition(0);
+        rightElevatorMotor.setTargetPosition(0);
+
+        leftElevatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION); // Tells the motor to run to the specific position
+        rightElevatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION); // Tells the motor to run to the specific position
+
+
+    }
+
 }

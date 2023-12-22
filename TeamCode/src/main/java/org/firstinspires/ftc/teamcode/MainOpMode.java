@@ -67,6 +67,11 @@ public class MainOpMode extends LinearOpMode {
         // run until the end of the match (driver presses STOP). Logic once game starts here
         while (opModeIsActive()) {
 
+            if( gamepad2.touchpad){
+                claw.openClaw();
+                arm.closeArm();
+                elevator.setElevatorDown();
+            }
             if (gamepad2.x) {
                 arm.closeArm();
             }
