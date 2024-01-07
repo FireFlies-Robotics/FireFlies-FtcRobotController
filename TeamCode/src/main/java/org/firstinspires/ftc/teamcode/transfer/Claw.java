@@ -31,6 +31,14 @@ public class Claw {
         rightClawServo.setPosition(CLAW_OPEN_POSITION);
         leftClawServo.setPosition(CLAW_OPEN_POSITION);
     }
+    public void moveClaw(){
+        if (rightClawServo.getPosition() == CLAW_CLOSED_POSITION){
+            openClaw();
+        }
+        if (rightClawServo.getPosition() == CLAW_OPEN_POSITION){
+            closeClaw();
+        }
+    }
 
 
 }

@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.transfer.Intake;
             claw.initClaw();
             waitForStart();
             while (opModeIsActive() && !isStopRequested()) {
-
+                claw.moveClaw();
                 if (gamepad2.circle) {
                     claw.closeClaw();
                 }

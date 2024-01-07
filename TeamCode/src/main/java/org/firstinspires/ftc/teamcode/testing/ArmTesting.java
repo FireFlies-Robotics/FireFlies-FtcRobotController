@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.transfer.Arm;
 
 @TeleOp(name="ArmTesting", group="Linear OpMode")
-@Disabled
+//@Disabled
 public class ArmTesting extends LinearOpMode {
 
     Arm arm;
