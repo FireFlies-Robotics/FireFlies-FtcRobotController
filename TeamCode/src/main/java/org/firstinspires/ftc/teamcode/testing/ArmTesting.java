@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.transfer.Arm;
 //@Disabled
 public class ArmTesting extends LinearOpMode {
 
-    Arm arm;
+    Arm arm = new Arm(this);
     // Declare OpMode members.
 
     @Override
@@ -18,7 +18,9 @@ public class ArmTesting extends LinearOpMode {
         arm.initArm();
 
         while (opModeIsActive()) {
-
+            if (gamepad2.right_bumper){
+                arm.moveArm();
+            }
             if (gamepad2.x) {
                 arm.closeArm();
             }

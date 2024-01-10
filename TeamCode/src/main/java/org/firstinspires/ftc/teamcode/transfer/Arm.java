@@ -33,7 +33,14 @@ public class Arm {
         leftArmServo.setPosition(ARM_OPEN_POSITION);
     }
 
-
+    public void moveArm(){
+        if (rightArmServo.getPosition() == ARM_CLOSED_POSITION){
+            openArm();
+        }
+        if (rightArmServo.getPosition() == ARM_OPEN_POSITION){
+            closeArm();
+        }
+    }
 
 
 }
