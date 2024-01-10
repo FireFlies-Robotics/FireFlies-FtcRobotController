@@ -40,7 +40,6 @@ public class MainOpMode extends LinearOpMode {
         elevator.initElevator();
         intake.initIntake();
 
-
         // Retrieve the IMU from the hardware map
         imu = hardwareMap.get(IMU.class, "imu");
         // Adjust the orientation parameters to match your robot
@@ -55,10 +54,6 @@ public class MainOpMode extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.addData("Speed", "Waiting to start");
         telemetry.update();
-
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
-
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -100,10 +95,10 @@ public class MainOpMode extends LinearOpMode {
                 wheels.setMaxSpeed(1);
             }
 
-            if(gamepad1.right_bumper){
+            if(gamepad2.right_bumper){
                 intake.intakeSpeedUp();
             }
-            if(gamepad1.left_bumper){
+            if(gamepad2.left_bumper){
                 intake.intakeSpeedDown();
             }
             // Move robot by controller 1
@@ -112,10 +107,6 @@ public class MainOpMode extends LinearOpMode {
             // Show data on driver station
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Speed", wheels.getMaxSpeed()*100 + "%");
-            telemetry.update();
-
-            // Show data on driver station
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.update();
         }
     }
