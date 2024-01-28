@@ -19,6 +19,14 @@ public class Intake {
         intakeMotor = opMode.hardwareMap.get(DcMotor.class, "intake");
         intakeMotor.setPower(intakeMotoeOff);
     }
+    public void activateIntake(){
+        if (intakeMotor.getPower() == 1){
+            intakeMotor.setPower(0);
+        }
+        else{
+            intakeMotor.setPower(1 );
+        }
+    }
     public void intakeSpeedUp(){ // speed up the motor in 0.1
         intakeMotor.setPower(currenIntakeSpeed + 0.1);
     }

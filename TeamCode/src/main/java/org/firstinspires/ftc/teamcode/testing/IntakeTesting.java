@@ -66,7 +66,7 @@ import org.firstinspires.ftc.teamcode.transfer.Intake;
  */
 
 @TeleOp(name="LoadSystemTesting", group="Linear OpMode")
-@Disabled
+//@Disabled
 public class IntakeTesting extends LinearOpMode {
 
     Intake intake = new Intake( this);
@@ -83,6 +83,9 @@ public class IntakeTesting extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+            if (gamepad2.x){
+                intake.activateIntake();
+            }
             if(gamepad1.right_bumper){
                 intake.intakeSpeedUp();
             }

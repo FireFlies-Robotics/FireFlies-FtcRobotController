@@ -23,14 +23,20 @@ public class Elevator {
         rightElevatorMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         opMode.telemetry.addData("Hardware: ", "initialized");
+        leftElevatorMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); // Reset the motor encoder
+        rightElevatorMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); // Reset the motor encoder
 
 
     }
 
-    public void moveElevator(float motorPower) {
+    public void moveElevator(float motorPower) { // this function make the elevator speed
 
         leftElevatorMotor.setPower(motorPower);
         rightElevatorMotor.setPower(motorPower);
+        if (leftElevatorMotor.getCurrentPosition() <=0 || rightElevatorMotor.getCurrentPosition() <=0){
+            stopElevator();
+        }
+        // todo find the max elevator position
     }
     public void stopElevator(){
         leftElevatorMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

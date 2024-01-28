@@ -25,6 +25,9 @@ public class MainOpMode extends LinearOpMode {
     // Time that runs since the program began running
     private ElapsedTime runtime = new ElapsedTime();
     Arm arm;
+
+
+
     Claw claw;
     Elevator elevator;
     Intake intake;
@@ -35,6 +38,10 @@ public class MainOpMode extends LinearOpMode {
     @Override
     public void runOpMode() {
         // Runs when init is pressed. Initialize variables and pregame logic here
+        arm = new Arm(this);
+        claw = new Claw(this);
+        intake = new Intake(this);
+        elevator = new Elevator(this);
         arm.initArm();
         claw.initArm();
         elevator.initElevator();
@@ -66,7 +73,15 @@ public class MainOpMode extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP). Logic once game starts here
         while (opModeIsActive()) {
-
+            if (gamepad2.x){
+                intake.activateIntake();
+            }
+            if(gamepad1.right_bumper){
+                intake.intakeSpeedUp();
+            }
+            if(gamepad1.left_bumper){
+                intake.intakeSpeedDown();
+            }
             if( gamepad2.touchpad){
                 claw.openClaw();
                 arm.closeArm();
