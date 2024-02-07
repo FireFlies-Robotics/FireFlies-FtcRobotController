@@ -6,6 +6,9 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+
+import java.util.ArrayList;
 
 public class Wheels {
 
@@ -20,6 +23,10 @@ public class Wheels {
     private final DcMotor frontRight;
     private final DcMotor backLeft;
     private final DcMotor backRight;
+
+    final double kPAngle = .02;
+    final double kPDrive = .06;
+    final double RANGE = 5;
 
     private final LinearOpMode opMode; // The opmode used to get the wheels
     private final IMU imu; // Gyros used to get the robots rotation
@@ -54,7 +61,7 @@ public class Wheels {
     }
 
     public void driveByJoystickFieldOriented(double x, double y, double rot) {
-        double yaw = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS); // Get the yaw angle of the robot
+        double yaw = -imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS); // Get the yaw angle of the robot
         double X = x;
         double Y = y;
         double ROT = rot;
@@ -68,9 +75,8 @@ public class Wheels {
             ROT  = 0;
         }
         // Rotate the movement direction counter to the robot's rotation
-        double rotX = X * Math.cos(-yaw) - Y * Math.sin(-yaw);
-        double rotY = X * Math.sin(-yaw) + Y * Math.cos(-yaw);
-
+        double rotX = x * Math.cos(yaw) - y * Math.sin(yaw);
+        double rotY = x * Math.sin(yaw) + y * Math.cos(yaw);
 
         rotX = rotX * 1.1;  // Counteract imperfect strafing
 
@@ -89,5 +95,49 @@ public class Wheels {
         backLeft.setPower(backLeftPower*maxSpeed);
         frontRight.setPower(frontRightPower*maxSpeed);
         backRight.setPower(backRightPower*maxSpeed);
+    }
+
+    public void driveRobotOriented(double x, double y, double rot) {
+        double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rot), 1);
+        double frontLeftPower = (y + x + rot) / denominator;
+        double backLeftPower = (y - x + rot) / denominator;
+        double frontRightPower = (y - x - rot) / denominator;
+        double backRightPower = (y + x - rot) / denominator;
+
+        frontLeft.setPower(frontLeftPower);
+        backLeft.setPower(backLeftPower);
+        frontRight.setPower(frontRightPower);
+        backRight.setPower(backRightPower);
+    }
+
+    public boolean autoAdjust(ArrayList<AprilTagDetection> tags) {
+        int minId = -1;
+        double minRange = 0;
+        double yaw = 0;
+
+        for (AprilTagDetection tag : tags) {
+            double range = tag.ftcPose.range * 2.54;
+
+            if (minId == -1) {
+                minId = tag.id;
+                minRange = range;
+                yaw = tag.ftcPose.yaw;
+            } else if (minRange > range) {
+                minId = tag.id;
+                minRange = range;
+                yaw = tag.ftcPose.yaw;
+            }
+        }
+
+        if (Math.abs(yaw) < 2) {
+            yaw = 0;
+        }
+
+        driveRobotOriented(0, (minRange - RANGE) * kPDrive, yaw * kPAngle);
+
+        opMode.telemetry.addData("Yaw", yaw);
+        opMode.telemetry.addData("Range", minRange);
+
+        return false;
     }
 }
