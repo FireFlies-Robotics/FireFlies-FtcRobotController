@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.transfer.Arm;
 import org.firstinspires.ftc.teamcode.transfer.Claw;
 import org.firstinspires.ftc.teamcode.transfer.Elevator;
@@ -52,6 +53,10 @@ public class Aytonomus {
             elevator.initElevator();
             intake.initIntake();
 
+            processor = AprilTagProcessor.easyCreateWithDefaults();
+            portal = VisionPortal.easyCreateWithDefaults(
+                    hardwareMap.get(WebcamName.class, "Webcam 1"), processor);
+
 
             // Retrieve the IMU from the hardware map
             imu = hardwareMap.get(IMU.class, "imu");
@@ -69,11 +74,11 @@ public class Aytonomus {
             // Wait for the game to start (driver presses PLAY)
             waitForStart();
 
-            while (opModeIsActive ()) {
+            while (!isStarted() && !isStopRequested()) {
 //                if(){}
 //                if(){}
 //                if(){}
-                wheels.driveForward(60, 0.6);
+                wheels.driveForward(17.861954, 0.6);
                 claw.openClawLeft();
                 wheels.rotateByEncoder(90, 0.4);
                 arm.openArm();
