@@ -53,6 +53,13 @@ public class Elevator {
 
         }
     }
+    public void elevatorUp(int ticks){
+        leftElevatorMotor.setTargetPosition(ticks);
+        rightElevatorMotor.setTargetPosition(ticks);
+        rightElevatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftElevatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+    }
     public void stopElevator(){
 
 
