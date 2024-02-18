@@ -19,7 +19,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 
-@TeleOp(name="Main Linear OpMode", group="Linear OpMode")
+@TeleOp(name="Linear OpMode", group="Linear OpMode")
 //Uncomment the line below to disable this op
 //@Disabled
 public class AutoAdjustTesting extends LinearOpMode {

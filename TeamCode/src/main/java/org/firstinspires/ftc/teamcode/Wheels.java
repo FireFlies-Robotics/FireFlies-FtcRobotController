@@ -24,8 +24,8 @@ public class Wheels {
     private final DcMotor backLeft;
     private final DcMotor backRight;
 
-    final double kPAngle = .02;
-    final double kPDrive = .06;
+    final double kPAngle = -.02;
+    final double kPDrive = .03;
     final double RANGE = 5;
 
     private final LinearOpMode opMode; // The opmode used to get the wheels
