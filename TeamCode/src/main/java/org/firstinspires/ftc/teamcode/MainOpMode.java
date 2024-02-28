@@ -120,12 +120,16 @@ public class MainOpMode extends LinearOpMode {
             }
 
             // Slow the robot down when the left bumber is pressed
+            if (gamepad1.right_bumper && !isStopRequested() && opModeIsActive()) {
+                wheels.setMaxSpeed(.3);
+            } else {
+                wheels.setMaxSpeed(1);
+            }
             if (gamepad1.left_bumper&& !isStopRequested() && opModeIsActive()) {
                 wheels.setMaxSpeed(.5);
             } else {
                 wheels.setMaxSpeed(1);
             }
-
             if (gamepad2.circle&& !isStopRequested() && opModeIsActive()){
                 intake.intake();
                 claw.openClawRight();
