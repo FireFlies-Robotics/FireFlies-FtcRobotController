@@ -5,6 +5,7 @@ import android.graphics.Paint;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
 import org.firstinspires.ftc.vision.VisionProcessor;
 import org.opencv.core.Core;
@@ -15,10 +16,11 @@ import org.opencv.imgproc.Imgproc;
 
 public class ExampleProcessor implements VisionProcessor {
 
-    OpMode opMode;
+    Telemetry telemetry;
 
-    ExampleProcessor(OpMode opMode) {
-        this.opMode = opMode;
+    ExampleProcessor() {super();}
+    ExampleProcessor(Telemetry telemetry) {
+        this.telemetry = telemetry;
     }
 
     Mat leftCrop;
@@ -27,6 +29,8 @@ public class ExampleProcessor implements VisionProcessor {
     double leftAvg;
     double centerAvg;
     double rightAvg;
+
+    final int coi = 1;
 
     @Override
     public void init(int width, int height, CameraCalibration calibration) {
@@ -43,9 +47,10 @@ public class ExampleProcessor implements VisionProcessor {
         centerCrop = frame.submat(new Rect((int) third, 0, (int) third, (int) frameSize.height));
         rightCrop = frame.submat(new Rect((int) (2 * third), 0, (int) third, (int) frameSize.height));
 
-        Core.extractChannel(leftCrop, leftCrop, 1);
-        Core.extractChannel(centerCrop, centerCrop, 1);
-        Core.extractChannel(rightCrop, rightCrop, 1);
+        Core.extractChannel(leftCrop, leftCrop, coi);
+        Core.extractChannel(centerCrop, centerCrop, coi);
+        Core.extractChannel(rightCrop, rightCrop, coi);
+        Core.extractChannel(frame, frame, coi);
 
         leftAvg = Core.mean(leftCrop).val[0];
         centerAvg = Core.mean(centerCrop).val[0];
@@ -53,11 +58,11 @@ public class ExampleProcessor implements VisionProcessor {
 
         double max = Math.max(Math.max(leftAvg, centerAvg), rightAvg);
         if (leftAvg == max) {
-            opMode.telemetry.addLine("LEFT");
+            telemetry.addLine("LEFT");
         } else if (centerAvg == max) {
-            opMode.telemetry.addLine("CENTER");
+            telemetry.addLine("CENTER");
         } else {
-            opMode.telemetry.addLine("RIGHT");
+            telemetry.addLine("RIGHT");
         }
 
         return frame;

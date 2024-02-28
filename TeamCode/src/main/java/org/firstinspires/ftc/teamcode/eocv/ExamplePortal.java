@@ -14,7 +14,7 @@ public class ExamplePortal extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        processor = new ExampleProcessor(this);
+        processor = new ExampleProcessor(telemetry);
         portal = VisionPortal.easyCreateWithDefaults(hardwareMap.get(WebcamName.class, "Webcam 1"), processor);
 
         waitForStart();
