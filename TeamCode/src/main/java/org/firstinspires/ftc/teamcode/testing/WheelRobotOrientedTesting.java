@@ -4,7 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.hardware.Wheels;
+import org.firstinspires.ftc.teamcode.Wheels;
+
+//import org.firstinspires.ftc.teamcode.hardware.Wheels;
 
 @TeleOp(name = "Robot Oriented Wheel Testing", group = "Testing")
 //Uncomment the line below to disable this op
@@ -25,7 +27,7 @@ public class WheelRobotOrientedTesting extends LinearOpMode {
         // Runs when init is pressed. Initialize variables and pregame logic here
         telemetry.addData("Status", "Initializing");
 
-        wheels = new Wheels(this);
+        wheels = new Wheels(this, null);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -40,7 +42,7 @@ public class WheelRobotOrientedTesting extends LinearOpMode {
             yAxis = -gamepad1.left_stick_y;
             rot = gamepad1.right_stick_x;
 
-            wheels.driveByJoystick(xAxis, yAxis, rot);
+            wheels.driveByJoystickFieldOriented(xAxis, yAxis, rot);
 
             // Show data on driver station
             telemetry.addData("Status", "Run Time: " + runtime.toString());
