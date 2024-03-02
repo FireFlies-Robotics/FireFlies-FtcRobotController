@@ -26,7 +26,7 @@ public class Wheels {
     private final DcMotor backRight;
 
     final double kPAngle = -.02;
-    final double kPDrive = .03;
+    final double kPDrive = .007;
 
     private final LinearOpMode opMode; // The opmode used to get the wheels
     private final IMU imu; // Gyros used to get the robots rotation
@@ -139,12 +139,17 @@ public class Wheels {
             }
         }
 
-        driveRobotOriented(0, (minRange - targetRange) * kPDrive, yaw * kPAngle);
-
         opMode.telemetry.addData("Yaw", yaw);
         opMode.telemetry.addData("Range", minRange);
+        opMode.telemetry.addData("Range Difference", minRange - targetRange);
+        opMode.telemetry.update();
 
-        return false;
+        if (minId == -1) return false;
+
+        driveRobotOriented(0, (minRange - targetRange) * kPDrive, yaw * kPAngle);
+
+        boolean returnCondition = Math.abs(minRange-targetRange) < 2.5 && Math.abs(yaw-targetYaw) < 2;
+        return returnCondition;
     }
 
     public void runWithEncoder() {
@@ -203,9 +208,9 @@ public class Wheels {
                     backLeft.getCurrentPosition());
             opMode.telemetry.update();
             if( distanceCM <= distanceCM/5){power = power/5;}
-
-            if (power == 0){stop();}
-            opMode.idle();
+//
+//            if (power == 0){stop();}
+//            opMode.idle();
         }
         stop();
     }
