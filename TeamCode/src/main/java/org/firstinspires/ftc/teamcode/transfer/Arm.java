@@ -13,7 +13,7 @@ public class Arm {
     }
 
     final private double ARM_CLOSED_POSITION = .03 ;
-    final private double ARM_OPEN_POSITION = (1.0/3.0)+.05;
+        final private double ARM_OPEN_POSITION = (1.0/3.0)+.03;
 
     public void initArm(){
         rightArmServo =  opMode.hardwareMap.get(Servo.class, "rightArmServo");

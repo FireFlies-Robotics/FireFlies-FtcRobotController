@@ -25,9 +25,8 @@ public class Wheels {
     private final DcMotor backLeft;
     private final DcMotor backRight;
 
-    final double kPAngle = .02;
-    final double kPDrive = .06;
-    final double RANGE = 5;
+    final double kPAngle = -.02;
+    final double kPDrive = .03;
 
     private final LinearOpMode opMode; // The opmode used to get the wheels
     private final IMU imu; // Gyros used to get the robots rotation
@@ -121,7 +120,7 @@ public class Wheels {
         backRight.setPower(backRightPower);
     }
 
-    public boolean autoAdjust(ArrayList<AprilTagDetection> tags) {
+    public boolean autoAdjust(ArrayList<AprilTagDetection> tags, double targetYaw, double targetRange) {
         int minId = -1;
         double minRange = 0;
         double yaw = 0;
@@ -140,11 +139,7 @@ public class Wheels {
             }
         }
 
-        if (Math.abs(yaw) < 2) {
-            yaw = 0;
-        }
-
-        driveRobotOriented(0, (minRange - RANGE) * kPDrive, yaw * kPAngle);
+        driveRobotOriented(0, (minRange - targetRange) * kPDrive, yaw * kPAngle);
 
         opMode.telemetry.addData("Yaw", yaw);
         opMode.telemetry.addData("Range", minRange);

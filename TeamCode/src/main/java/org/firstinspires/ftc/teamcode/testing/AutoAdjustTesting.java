@@ -17,9 +17,11 @@ import org.firstinspires.ftc.teamcode.transfer.Intake;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
 
 
-@TeleOp(name="Main Linear OpMode", group="Linear OpMode")
+@TeleOp(name="Linear OpMode", group="Linear OpMode")
 //Uncomment the line below to disable this op
 //@Disabled
 public class AutoAdjustTesting extends LinearOpMode {
@@ -54,9 +56,10 @@ public class AutoAdjustTesting extends LinearOpMode {
         elevator.initElevator();
         intake.initIntake();
 
+        WebcamName webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
+
         processor = AprilTagProcessor.easyCreateWithDefaults();
-        portal = VisionPortal.easyCreateWithDefaults(
-                hardwareMap.get(WebcamName.class, "Webcam 1"), processor);
+        portal = VisionPortal.easyCreateWithDefaults(webcamName, processor);
 
 
         // Retrieve the IMU from the hardware map
@@ -153,7 +156,7 @@ public class AutoAdjustTesting extends LinearOpMode {
             }
 
             if (gamepad1.share) {
-                wheels.autoAdjust(processor.getDetections());
+                wheels.autoAdjust(processor.getDetections(), 0, 2);
             }
             // Show data on driver station
             telemetry.addData("Status", "Run Time: " + runtime.toString());
