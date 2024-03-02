@@ -120,22 +120,42 @@ public class Wheels {
         backRight.setPower(backRightPower);
     }
 
-    public boolean autoAdjust(ArrayList<AprilTagDetection> tags, double targetYaw, double targetRange) {
+    public boolean autoAdjust(ArrayList<AprilTagDetection> tags, double targetRange, int targetTagId) {
         int minId = -1;
         double minRange = 0;
         double yaw = 0;
 
         for (AprilTagDetection tag : tags) {
-            double range = tag.ftcPose.range * 2.54;
+            if (targetTagId == -1) {
+                double range = tag.ftcPose.range * 2.54;
 
-            if (minId == -1) {
-                minId = tag.id;
-                minRange = range;
-                yaw = tag.ftcPose.yaw;
-            } else if (minRange > range) {
-                minId = tag.id;
-                minRange = range;
-                yaw = tag.ftcPose.yaw;
+                if (minId == -1) {
+                    minId = tag.id;
+                    minRange = range;
+                    yaw = tag.ftcPose.yaw;
+                } else if (minRange > range) {
+                    minId = tag.id;
+                    minRange = range;
+                    yaw = tag.ftcPose.yaw;
+                }
+            } else {
+                if (minId != targetTagId) {
+                    if (tag.id == targetTagId) {
+                        double range = tag.ftcPose.range * 2.54;
+                        minId = targetTagId;
+                        minRange = range;
+                        yaw = tag.ftcPose.yaw;
+                        break;
+                    }
+
+                    minId = -2;
+
+                    if (tag.id > targetTagId) {
+                        yaw = -.5;
+                    } else {
+                        yaw = .5;
+                    }
+                }
             }
         }
 
@@ -146,9 +166,14 @@ public class Wheels {
 
         if (minId == -1) return false;
 
+        if (minId == -2) {
+            driveRobotOriented(0, 0, yaw);
+            return false;
+        }
+
         driveRobotOriented(0, (minRange - targetRange) * kPDrive, yaw * kPAngle);
 
-        boolean returnCondition = Math.abs(minRange-targetRange) < 2.5 && Math.abs(yaw-targetYaw) < 2;
+        boolean returnCondition = Math.abs(minRange-targetRange) < 3 && Math.abs(yaw) < 2;
         return returnCondition;
     }
 

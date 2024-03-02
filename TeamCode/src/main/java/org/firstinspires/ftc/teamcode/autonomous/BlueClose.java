@@ -29,6 +29,7 @@ public class BlueClose extends LinearOpMode {
 
     VisionPortal portal;
     AprilTagProcessor processor;
+    int targetTagId = 3;
     @Override
     public void runOpMode() throws InterruptedException {
         // Retrieve the IMU from the hardware map
@@ -62,21 +63,63 @@ public class BlueClose extends LinearOpMode {
             wheels.driveRobotOriented(0, .3, 0);
         }
 
+        while (!hastTag(processor.getDetections(), targetTagId)) {
+            double strafeDirection = 0;
+            boolean targetTagReached = false;
+            boolean breakLoop = false;
+
+            for (AprilTagDetection tag : processor.getDetections()) {
+                if (!targetTagReached) {
+                    if (tag.id == targetTagId) {
+                        if (Math.abs(tag.ftcPose.x) < 1) {
+                            breakLoop = true;
+                        } else if (tag.ftcPose.x > 0) {
+                            strafeDirection = .5;
+                        } else {
+                            strafeDirection = -.5;
+                        }
+                    } else if (tag.id > targetTagId) {
+                        strafeDirection = -.5;
+                    } else {
+                        strafeDirection = .5;
+                    }
+
+                }
+
+                if (breakLoop) break;
+            }
+
+            wheels.driveRobotOriented(strafeDirection, 0, 0);
+        }
+
         boolean arivedToPosition = false;
         while (!arivedToPosition) {
             ArrayList<AprilTagDetection> detections = processor.getDetections();
 
             if (detections.size() > 0) {
-                arivedToPosition = wheels.autoAdjust(detections, 0, 20.32);
+                arivedToPosition = wheels.autoAdjust(detections, 20.32, targetTagId);
             } else {
                 wheels.driveRobotOriented(0, 0, 0);
             }
+
+            telemetry.addData("Loop", "autoadjust");
+            telemetry.update();
         }
+        telemetry.addData("Loop", "post-autoadjust");
+        telemetry.update();
         claw.openClawLeft();
         claw.openClawRight();
         sleep(10);
         wheels.driveBackword(10, 0.5);
         wheels.driveLeft(65, 0.5);
         wheels.driveForward(10,1);
+    }
+
+    boolean hastTag(ArrayList<AprilTagDetection> detections, int targetTagId) {
+        for (AprilTagDetection tag : detections) {
+            if (tag.id == targetTagId) return true;
+        }
+
+        return false;
     }
 }
