@@ -124,9 +124,12 @@ public class Wheels {
         int minId = -1;
         double minRange = 0;
         double yaw = 0;
+        int aprilTagCount = 0;
 
         for (AprilTagDetection tag : tags) {
             double range = tag.ftcPose.range * 2.54;
+            aprilTagCount++;
+            opMode.telemetry.addLine("Found tag " + tag.id);
 
             if (minId == -1) {
                 minId = tag.id;
@@ -139,16 +142,19 @@ public class Wheels {
             }
         }
 
-        opMode.telemetry.addData("Yaw", yaw);
-        opMode.telemetry.addData("Range", minRange);
-        opMode.telemetry.addData("Range Difference", minRange - targetRange);
-        opMode.telemetry.update();
-
         if (minId == -1) return false;
 
         driveRobotOriented(0, (minRange - targetRange) * kPDrive, yaw * kPAngle);
 
-        boolean returnCondition = Math.abs(minRange-targetRange) < 2.5 && Math.abs(yaw-targetYaw) < 2;
+        boolean returnCondition = (Math.abs(minRange-targetRange) < 2.5) && (Math.abs(yaw-targetYaw) < 2);
+
+        opMode.telemetry.addData("Yaw", yaw);
+        opMode.telemetry.addData("Range", minRange);
+        opMode.telemetry.addData("Range Difference", minRange - targetRange);
+        opMode.telemetry.addData("Yaw Difference", Math.abs(yaw-targetYaw));
+        opMode.telemetry.addData("April Tags", aprilTagCount);
+        opMode.telemetry.update();
+
         return returnCondition;
     }
 

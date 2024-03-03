@@ -29,6 +29,8 @@ public class BlueClose extends LinearOpMode {
 
     VisionPortal portal;
     AprilTagProcessor processor;
+
+    int targetTagId = 3;
     @Override
     public void runOpMode() throws InterruptedException {
         // Retrieve the IMU from the hardware map
@@ -67,11 +69,33 @@ public class BlueClose extends LinearOpMode {
             ArrayList<AprilTagDetection> detections = processor.getDetections();
 
             if (detections.size() > 0) {
-                arivedToPosition = wheels.autoAdjust(detections, 0, 20.32);
+                arivedToPosition = wheels.autoAdjust(detections, 0, 20);
             } else {
                 wheels.driveRobotOriented(0, 0, 0);
             }
         }
+        telemetry.addLine("Arrived to position");
+
+        int minId = -1;
+        double minRange = 0;
+
+        for (AprilTagDetection tag : processor.getDetections()) {
+            double range = tag.ftcPose.range * 2.54;
+
+            if (minId == -1) {
+                minId = tag.id;
+                minRange = range;
+            } else if (minRange > range) {
+                minId = tag.id;
+                minRange = range;
+            }
+        }
+
+//        wheels.driveRight(5*(targetTagId - minId), .6);
+        wheels.driveRight(24*(targetTagId - minId), .6);
+        telemetry.addData("strafe", (targetTagId - minId));
+        telemetry.update();
+
         claw.openClawLeft();
         claw.openClawRight();
         sleep(10);
