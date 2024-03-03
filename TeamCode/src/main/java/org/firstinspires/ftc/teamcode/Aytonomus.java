@@ -82,7 +82,7 @@ public class Aytonomus {
                 claw.openClawLeft();
                 wheels.rotateByEncoder(90, 0.4);
                 arm.openArm();
-                wheels.autoAdjust(processor.getDetections());
+//                wheels.autoAdjust(processor.getDetections());
 
                 elevator.elevatorUp(700);
                 claw.openClawRight();

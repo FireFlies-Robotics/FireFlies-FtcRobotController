@@ -17,10 +17,12 @@ import org.opencv.imgproc.Imgproc;
 public class ExampleProcessor implements VisionProcessor {
 
     Telemetry telemetry;
+    int coi = 1;
 
     ExampleProcessor() {super();}
-    ExampleProcessor(Telemetry telemetry) {
+    public ExampleProcessor(Telemetry telemetry, int coi) {
         this.telemetry = telemetry;
+        this.coi = coi;
     }
 
     Mat leftCrop;
@@ -30,7 +32,11 @@ public class ExampleProcessor implements VisionProcessor {
     double centerAvg;
     double rightAvg;
 
-    final int coi = 1;
+    public int getPropPlacement() {
+        return propPlacement;
+    }
+
+    private int propPlacement = -1;
 
     @Override
     public void init(int width, int height, CameraCalibration calibration) {
@@ -58,10 +64,13 @@ public class ExampleProcessor implements VisionProcessor {
 
         double max = Math.max(Math.max(leftAvg, centerAvg), rightAvg);
         if (leftAvg == max) {
+            propPlacement = 1;
             telemetry.addLine("LEFT");
         } else if (centerAvg == max) {
+            propPlacement = 2;
             telemetry.addLine("CENTER");
         } else {
+            propPlacement = 3;
             telemetry.addLine("RIGHT");
         }
 
