@@ -54,8 +54,7 @@ public class BlueCloseProp extends LinearOpMode {
         propProcessor = new ExampleProcessor(telemetry, 1);
         aprilTagProcessor = AprilTagProcessor.easyCreateWithDefaults();
         portal = VisionPortal.easyCreateWithDefaults(
-                webcamName, propProcessor, aprilTagProcessor
-        );
+                webcamName, propProcessor, aprilTagProcessor);
 
         propPosition = propProcessor.getPropPlacement();
         telemetry.addData("Prop", propPosition);
@@ -63,30 +62,30 @@ public class BlueCloseProp extends LinearOpMode {
         telemetry.update();
 
         waitForStart();
-
-        wheels.driveForward(65, .8);
-        wheels.rotateByEncoder(-90, .5);
-        arm.openArm();
-        wheels.driveForward(60, .5);
-        while (aprilTagProcessor.getDetections().size() == 0) {
-            wheels.driveRobotOriented(0, .3, 0);
-        }
-
-        boolean arivedToPosition = false;
-        while (!arivedToPosition) {
-            ArrayList<AprilTagDetection> detections = aprilTagProcessor.getDetections();
-
-            if (detections.size() > 0) {
-                arivedToPosition = wheels.autoAdjust(detections, 0, 20.32);
-            } else {
-                wheels.driveRobotOriented(0, 0, 0);
-            }
-        }
-        claw.openClawLeft();
-        claw.openClawRight();
-        sleep(10);
-        wheels.driveBackword(10, 0.5);
-        wheels.driveLeft(65, 0.5);
-        wheels.driveForward(10,1);
+//
+//        wheels.driveForward(65, .8);
+//        wheels.rotateByEncoder(-90, .5);
+//        arm.openArm();
+//        wheels.driveForward(60, .5);
+//        while (aprilTagProcessor.getDetections().size() == 0) {
+//            wheels.driveRobotOriented(0, .3, 0);
+//        }
+//
+//        boolean arivedToPosition = false;
+//        while (!arivedToPosition) {
+//            ArrayList<AprilTagDetection> detections = aprilTagProcessor.getDetections();
+//
+//            if (detections.size() > 0) {
+//                arivedToPosition = wheels.autoAdjust(detections, 0, 20.32);
+//            } else {
+//                wheels.driveRobotOriented(0, 0, 0);
+//            }
+//        }
+//        claw.openClawLeft();
+//        claw.openClawRight();
+//        sleep(10);
+//        wheels.driveBackword(10, 0.5);
+//        wheels.driveLeft(65, 0.5);
+//        wheels.driveForward(10,1);
     }
 }

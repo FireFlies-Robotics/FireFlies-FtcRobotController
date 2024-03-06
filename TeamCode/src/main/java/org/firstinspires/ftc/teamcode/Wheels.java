@@ -28,6 +28,8 @@ public class Wheels {
     final double kPAngle = -.02;
     final double kPDrive = .007;
 
+     PID pidDrive = new PID(.007,0,0,0);
+    final PID pidAngle = new PID(.02,0,0,0);
     private final LinearOpMode opMode; // The opmode used to get the wheels
     private final IMU imu; // Gyros used to get the robots rotation
 
@@ -44,7 +46,8 @@ public class Wheels {
     public Wheels(LinearOpMode opMode, IMU imu) {
         this.opMode = opMode;
         this.imu = imu;
-
+        pidDrive.setTolerance(1);
+        pidAngle.setTolerance(2);
         // Getting the wheel motors and setting them up
 
         frontLeft = opMode.hardwareMap.get(DcMotor.class, "leftFront");
@@ -143,10 +146,10 @@ public class Wheels {
         }
 
         if (minId == -1) return false;
-
-        driveRobotOriented(0, (minRange - targetRange) * kPDrive, yaw * kPAngle);
-
-        boolean returnCondition = (Math.abs(minRange-targetRange) < 2.5) && (Math.abs(yaw-targetYaw) < 2);
+        double driveSpeed = pidDrive.calculate(minRange, targetRange);
+        double rotationSpeed = pidAngle.calculate(yaw,targetYaw);
+        driveRobotOriented(0, driveSpeed, rotationSpeed);
+        boolean returnCondition = (pidDrive.atSetPoint() && pidAngle.atSetPoint());
 
         opMode.telemetry.addData("Yaw", yaw);
         opMode.telemetry.addData("Range", minRange);
@@ -187,7 +190,7 @@ public class Wheels {
         driveWheelToPosition(frontLeft,power, toPosition);
         driveWheelToPosition(backRight, power, -toPosition);
         driveWheelToPosition(backLeft, power, toPosition);
-        while (opMode.opModeIsActive() && motorsIsBussy()) {
+        while (opMode.opModeIsActive() &&  !opMode.isStopRequested() && motorsIsBussy()) {
             opMode.telemetry.addData("Front Position",  "%7d :%7d",
                     frontRight.getCurrentPosition(),
                     frontLeft.getCurrentPosition());
@@ -205,7 +208,7 @@ public class Wheels {
         driveWheelToPosition(frontLeft,power, toPosition);
         driveWheelToPosition(backRight, power, toPosition);
         driveWheelToPosition(backLeft, power, toPosition);
-        while (opMode.opModeIsActive() && motorsIsBussy()) {
+        while (opMode.opModeIsActive() &&  !opMode.isStopRequested() && motorsIsBussy()) {
             opMode.telemetry.addData("Front Position",  "%7d :%7d",
                     frontRight.getCurrentPosition(),
                     frontLeft.getCurrentPosition());
@@ -226,7 +229,7 @@ public class Wheels {
         driveWheelToPosition(frontLeft,power, -toPosition);
         driveWheelToPosition(backRight, power, -toPosition);
         driveWheelToPosition(backLeft, power, -toPosition);
-        while (opMode.opModeIsActive() && motorsIsBussy()) {
+        while (opMode.opModeIsActive() &&  !opMode.isStopRequested() && motorsIsBussy()) {
             opMode.telemetry.addData("Front Position",  "%7d :%7d",
                     frontRight.getCurrentPosition(),
                     frontLeft.getCurrentPosition());
@@ -245,7 +248,7 @@ public class Wheels {
         driveWheelToPosition(frontLeft,power ,-toPosition);
         driveWheelToPosition(backRight,power ,-toPosition);
         driveWheelToPosition(backLeft,power ,toPosition);
-        while (opMode.opModeIsActive() && motorsIsBussy()) {
+        while (opMode.opModeIsActive() &&  !opMode.isStopRequested() && motorsIsBussy()) {
             opMode.telemetry.addData("Front Position",  "%7d :%7d",
                     frontRight.getCurrentPosition(),
                     frontLeft.getCurrentPosition());
@@ -264,7 +267,7 @@ public class Wheels {
         driveWheelToPosition(frontLeft,power ,toPosition);
         driveWheelToPosition(backRight,power ,toPosition);
         driveWheelToPosition(backLeft,power ,-toPosition);
-        while (opMode.opModeIsActive() && motorsIsBussy()) {
+        while (opMode.opModeIsActive() &&  !opMode.isStopRequested() && motorsIsBussy()) {
             opMode.telemetry.addData("Front Position",  "%7d :%7d",
                     frontRight.getCurrentPosition(),
                     frontLeft.getCurrentPosition());

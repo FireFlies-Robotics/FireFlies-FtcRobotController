@@ -8,10 +8,13 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.transfer.Arm;
 import org.firstinspires.ftc.teamcode.transfer.Claw;
 import org.firstinspires.ftc.teamcode.transfer.Elevator;
 import org.firstinspires.ftc.teamcode.transfer.Intake;
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 
 @TeleOp(name="Main Linear OpMode", group="Linear OpMode")
@@ -34,6 +37,9 @@ public class MainOpMode extends LinearOpMode {
     Wheels wheels; // Declare the wheels class to control the wheels
 
     IMU imu; // Declare class for getting robot angles
+    VisionPortal portal;
+    AprilTagProcessor processor;
+
     @Override
     public void runOpMode() {
         // Runs when init is pressed. Initialize variables and pregame logic here
@@ -46,6 +52,11 @@ public class MainOpMode extends LinearOpMode {
         elevator.initElevator();
         intake.initIntake();
 
+
+        WebcamName webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
+
+        processor = AprilTagProcessor.easyCreateWithDefaults();
+        portal = VisionPortal.easyCreateWithDefaults(webcamName, processor);
 
         // Retrieve the IMU from the hardware map
         imu = hardwareMap.get(IMU.class, "imu");
@@ -141,7 +152,12 @@ public class MainOpMode extends LinearOpMode {
             }
             // Move robot by controller 1
             if ( !isStopRequested() && opModeIsActive()) {
-                wheels.driveByJoystickFieldOriented(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
+                if (gamepad1.share){
+                    wheels.autoAdjust(processor.getDetections(), 0, 20);
+                }
+                else {
+                    wheels.driveByJoystickFieldOriented(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
+                }
             }
             // Show data on driver station
             telemetry.addData("Status", "Run Time: " + runtime.toString());
