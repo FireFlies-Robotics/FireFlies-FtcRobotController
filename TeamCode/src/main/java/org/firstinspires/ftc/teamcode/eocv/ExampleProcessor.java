@@ -17,7 +17,7 @@ import org.opencv.imgproc.Imgproc;
 public class ExampleProcessor implements VisionProcessor {
 
     Telemetry telemetry;
-    int coi = 1;
+    int coi = 2;
 
     ExampleProcessor() {super();}
     public ExampleProcessor(Telemetry telemetry, int coi) {

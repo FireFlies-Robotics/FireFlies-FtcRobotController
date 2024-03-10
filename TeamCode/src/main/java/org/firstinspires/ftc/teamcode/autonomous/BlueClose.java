@@ -23,7 +23,7 @@ public class BlueClose extends LinearOpMode {
     enum aliance{
         RED, BLUE;
     }
-    aliance currentAliance;
+    aliance currentAliance = aliance.BLUE;
 
     Arm arm;
     Claw claw;
@@ -36,7 +36,7 @@ public class BlueClose extends LinearOpMode {
 
     VisionPortal portal;
     AprilTagProcessor processor;
-    int propPosition = 0;
+    int propPosition = 3;
 
     public void autonomusPurple(int propPosition){
 
@@ -51,9 +51,10 @@ public class BlueClose extends LinearOpMode {
         wheels.rotateByEncoder(-90,0.5);
         wheels.driveForward(66, 0.4);
     }
-    public void autonomusYellowClose(aliance currentAliance, int targetTagId){
-        if ( currentAliance == aliance.RED) {
-            targetTagId = targetTagId + 3;
+
+    public void autonomusYellow(aliance currentAliance, int targetTagId){
+        if (currentAliance == aliance.RED) {
+            targetTagId += 3;
         }
         wheels.driveForward(65, .8);
 
@@ -66,7 +67,9 @@ public class BlueClose extends LinearOpMode {
         if (opModeIsActive() && !isStopRequested()) {
             arm.openArm();
         }
+
         wheels.driveForward(60, .5);
+
         while (processor.getDetections().size() == 0 && opModeIsActive() && !isStopRequested())  {
             wheels.driveRobotOriented(0, .3, 0);
         }
@@ -75,7 +78,7 @@ public class BlueClose extends LinearOpMode {
         while (!arivedToPosition && opModeIsActive() && !isStopRequested()) {
             ArrayList<AprilTagDetection> detections = processor.getDetections();
 
-            if (detections.size() > 0 ) {
+            if (detections.size() > 0) {
                 arivedToPosition = wheels.autoAdjust(detections, 0, 20);
             } else {
                 wheels.driveRobotOriented(0, 0, 0);
@@ -111,6 +114,7 @@ public class BlueClose extends LinearOpMode {
         wheels.driveLeft(65, 0.5);
         wheels.driveForward(10,1);
     }
+
     int targetTagId = 3;
     @Override
     public void runOpMode() throws InterruptedException {
@@ -134,14 +138,21 @@ public class BlueClose extends LinearOpMode {
         propProcessor = new ExampleProcessor(telemetry, 1);
 
         portal = VisionPortal.easyCreateWithDefaults(
-                webcamName, processor);
+                webcamName, propProcessor);
+
+        while (!isStopRequested()) {
+            propPosition = propProcessor.getPropPlacement();
+            telemetry.addLine(String.valueOf(propPosition));
+            telemetry.update();
+        }
+
         propPosition = propProcessor.getPropPlacement();
         telemetry.addData("Prop", propPosition);
 
         telemetry.update();
         waitForStart();
 
-        autonomusPurple(propPosition);
-        autonomusYellowClose(aliance.BLUE, propPosition);
+//        autonomusPurple(propPosition);
+//        autonomusYellow(currentAliance, propPosition);
     }
 }
