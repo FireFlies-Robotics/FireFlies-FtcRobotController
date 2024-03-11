@@ -44,6 +44,8 @@ public class Elevator {
     }
     public void climb(){
         while (opMode.opModeIsActive()){
+
+
             leftElevatorMotor.setTargetPosition(0);
             rightElevatorMotor.setTargetPosition(0);
             rightElevatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
