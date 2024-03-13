@@ -83,11 +83,14 @@ public class IntakeTesting extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+            if (gamepad2.x){
+                intake.intake();
+            }
             if(gamepad1.right_bumper){
-                intake.intakeSpeedUp();
+                intake.intake();
             }
             if(gamepad1.left_bumper){
-                intake.intakeSpeedDown();
+                intake.outake();
             }
         }
 

@@ -14,15 +14,15 @@ import org.firstinspires.ftc.teamcode.transfer.Claw;
 
         @Override
         public void runOpMode() {
-            claw.initArm();
+            claw.initClaw();
 
             while (opModeIsActive()) {
 
                 if (gamepad2.circle) {
-                    claw.closeClaw();
+                    claw.closeClawLeft();
                 }
                 if (gamepad2.square){
-                    claw.openClaw();
+                    claw.openClawRight();
                 }
             }
         }

@@ -11,26 +11,38 @@ public class Claw {
         this.opMode = opMode;
     }
 
-    final private float CLAW_CLOSED_POSITION = 0;
-    final private float CLAW_OPEN_POSITION = 1;
+    final private double CLAW_CLOSED_POSITION = 0;
+    final private double CLAW_OPEN_POSITION = .3;
 
-    public void initArm(){
+    public void initClaw(){
         rightClawServo =  opMode.hardwareMap.get(Servo.class, "rightClawServo");
         leftClawServo = opMode.hardwareMap.get(Servo.class, "leftClawServo");
 
-        rightClawServo.setDirection(Servo.Direction.REVERSE); //todo check which servo needs to be reversed
-        closeClaw();
+        leftClawServo.setDirection(Servo.Direction.REVERSE);
+        closeClawLeft();
+        closeClawRight();
 
     }
-    public void closeClaw(){ //todo check which position is close and open
-        rightClawServo.setPosition(CLAW_CLOSED_POSITION);
+    public void closeClawLeft() {
         leftClawServo.setPosition(CLAW_CLOSED_POSITION);
     }
-
-    public void openClaw(){
-        rightClawServo.setPosition(CLAW_OPEN_POSITION);
-        leftClawServo.setPosition(CLAW_OPEN_POSITION);
+    public void closeClawRight() {
+        rightClawServo.setPosition(CLAW_CLOSED_POSITION);
     }
 
+    public void openClawLeft(){
+        leftClawServo.setPosition(CLAW_OPEN_POSITION);
+    }
+    public void openClawRight(){
+        rightClawServo.setPosition(CLAW_OPEN_POSITION);
+    }
+
+    public boolean isOpenLeft() {
+        return leftClawServo.getPosition() > 0;
+    }
+
+    public boolean isOpenRight() {
+        return rightClawServo.getPosition() > 0;
+    }
 
 }

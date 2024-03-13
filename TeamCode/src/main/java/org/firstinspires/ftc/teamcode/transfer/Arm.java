@@ -12,14 +12,14 @@ public class Arm {
         this.opMode = opMode;
     }
 
-    final private float ARM_CLOSED_POSITION = 0;
-    final private float ARM_OPEN_POSITION = 1;
+    final private double ARM_CLOSED_POSITION = .03 ;
+    final private double ARM_OPEN_POSITION = (1.0/3.0)+.05;
 
     public void initArm(){
         rightArmServo =  opMode.hardwareMap.get(Servo.class, "rightArmServo");
         leftArmServo = opMode.hardwareMap.get(Servo.class, "leftArmServo");
 
-        rightArmServo.setDirection(Servo.Direction.REVERSE); //todo check which servo needs to be reversed
+        leftArmServo.setDirection(Servo.Direction.REVERSE); //todo check which servo needs to be reversed
         closeArm();
 
     }
@@ -31,6 +31,11 @@ public class Arm {
     public void openArm(){
         rightArmServo.setPosition(ARM_OPEN_POSITION);
         leftArmServo.setPosition(ARM_OPEN_POSITION);
+    }
+
+    public void midArm() {
+        rightArmServo.setPosition(ARM_OPEN_POSITION/2);
+        leftArmServo.setPosition(ARM_OPEN_POSITION/2);
     }
 
 

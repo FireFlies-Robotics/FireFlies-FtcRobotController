@@ -25,6 +25,10 @@ public class MainOpMode extends LinearOpMode {
     // Time that runs since the program began running
     private ElapsedTime runtime = new ElapsedTime();
     Arm arm;
+
+    boolean lastStateLeft = false;
+    boolean lastStateRight = false;
+
     Claw claw;
     Elevator elevator;
     Intake intake;
@@ -35,16 +39,21 @@ public class MainOpMode extends LinearOpMode {
     @Override
     public void runOpMode() {
         // Runs when init is pressed. Initialize variables and pregame logic here
+        arm = new Arm(this);
+        claw = new Claw(this);
+        intake = new Intake(this);
+        elevator = new Elevator(this);
         arm.initArm();
-        claw.initArm();
+        claw.initClaw();
         elevator.initElevator();
         intake.initIntake();
+
 
         // Retrieve the IMU from the hardware map
         imu = hardwareMap.get(IMU.class, "imu");
         // Adjust the orientation parameters to match your robot
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
+                RevHubOrientationOnRobot.LogoFacingDirection.FORWARD,
                 RevHubOrientationOnRobot.UsbFacingDirection.UP));
         // Without this, the REV Hub's orientation is assumed to be logo up / USB forward
         imu.initialize(parameters);
@@ -62,53 +71,72 @@ public class MainOpMode extends LinearOpMode {
         // run until the end of the match (driver presses STOP). Logic once game starts here
         while (opModeIsActive()) {
 
-            if( gamepad2.touchpad){
-                claw.openClaw();
-                arm.closeArm();
-                elevator.setElevatorDown();
-            }
-            if (gamepad2.x) {
+            if (gamepad2.cross && !isStopRequested() && opModeIsActive()) {
                 arm.closeArm();
             }
-            if (gamepad2.triangle){
+
+            if (gamepad2.triangle&& !isStopRequested() && opModeIsActive()) {
                 arm.openArm();
             }
 
-            if (gamepad2.circle) {
-                claw.closeClaw();
+            if (gamepad2.options&& !isStopRequested() && opModeIsActive()) {
+                arm.midArm();
             }
-            if (gamepad2.square){
-                claw.openClaw();
+            if (gamepad2.share&& !isStopRequested() && opModeIsActive()){
+                elevator.climb();
             }
 
-            elevator.moveElevator(gamepad2.right_trigger);
-            elevator.moveElevator(-gamepad2.left_trigger);
-
-            if (gamepad2.right_trigger == 0 && gamepad2.left_trigger == 0){
-                elevator.stopElevator();
+            if (gamepad2.left_bumper && !lastStateLeft && claw.isOpenRight()&& !isStopRequested() && opModeIsActive()) {
+                claw.closeClawRight();
+                lastStateLeft = true;
+            } else if (gamepad2.left_bumper && !lastStateLeft && !claw.isOpenRight()&& !isStopRequested() && opModeIsActive()) {
+                claw.openClawRight();
+                lastStateLeft = true;
+            } else if (!gamepad2.left_bumper&& !isStopRequested() && opModeIsActive()) {
+                lastStateLeft = false;
             }
+
+            if (gamepad2.right_bumper && !lastStateRight && claw.isOpenLeft()&& !isStopRequested() && opModeIsActive()) {
+                claw.closeClawLeft();
+                lastStateRight = true;
+            } else if (gamepad2.right_bumper && !lastStateRight && !claw.isOpenLeft()&& !isStopRequested() && opModeIsActive()) {
+                claw.openClawLeft();
+                lastStateRight = true;
+            } else if (!gamepad2.right_bumper&& !isStopRequested() && opModeIsActive()) {
+                lastStateRight = false;
+            }
+
+            elevator.moveElevator(gamepad2.right_trigger - gamepad2.left_trigger);
+
+//            if (gamepad2.right_trigger <= 0.1 && gamepad2.left_trigger <= 0.1){
+//                elevator.stopElevator();
+//            }
 
             // Reset the robot's default angle with options button
-            if (gamepad1.options) {
+            if (gamepad1.options&& !isStopRequested() && opModeIsActive()) {
                 imu.resetYaw();
             }
 
             // Slow the robot down when the left bumber is pressed
-            if (gamepad1.left_bumper) {
+            if (gamepad1.left_bumper&& !isStopRequested() && opModeIsActive()) {
                 wheels.setMaxSpeed(.5);
             } else {
                 wheels.setMaxSpeed(1);
             }
 
-            if(gamepad2.right_bumper){
-                intake.intakeSpeedUp();
-            }
-            if(gamepad2.left_bumper){
-                intake.intakeSpeedDown();
+            if (gamepad2.circle&& !isStopRequested() && opModeIsActive()){
+                intake.intake();
+                claw.openClawRight();
+                claw.openClawLeft();
+            } else if (gamepad2.square&& !isStopRequested() && opModeIsActive()){
+                intake.outake();
+            } else {
+                intake.stop();
             }
             // Move robot by controller 1
-            wheels.driveByJoystickFieldOriented(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
-
+            if ( !isStopRequested() && opModeIsActive()) {
+                wheels.driveByJoystickFieldOriented(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
+            }
             // Show data on driver station
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Speed", wheels.getMaxSpeed()*100 + "%");
