@@ -79,13 +79,17 @@ public class Aytonomus {
 //                if(){}
 //                if(){}
                 wheels.driveForward(17.861954, 0.6);
-                claw.openClawLeft();
                 wheels.rotateByEncoder(90, 0.4);
                 arm.openArm();
+                wheels.driveForward(70, 0.2);
+                sleep(20);
+                claw.openClawLeft();
+                claw.openClawRight();
+                wheels.driveLeft(15,0.5);
+                wheels.rotateByEncoder(-90,0.5);
+                arm.closeArm();
 //                wheels.autoAdjust(processor.getDetections());
 
-                elevator.elevatorUp(700);
-                claw.openClawRight();
 
 
             }

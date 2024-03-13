@@ -18,7 +18,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.ArrayList;
 
-@Autonomous(name = "Blue Close Autonomous", group = "Autonomous")
+@Autonomous(name = "this one", group = "Autonomous")
 public class BlueClose extends LinearOpMode {
     enum aliance{
         RED, BLUE;
@@ -135,24 +135,51 @@ public class BlueClose extends LinearOpMode {
 
         WebcamName webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
         processor = AprilTagProcessor.easyCreateWithDefaults();
-        propProcessor = new ExampleProcessor(telemetry, 1);
+        propProcessor = new ExampleProcessor(telemetry, 2);
 
         portal = VisionPortal.easyCreateWithDefaults(
                 webcamName, propProcessor);
 
-        while (!isStopRequested()) {
-            propPosition = propProcessor.getPropPlacement();
-            telemetry.addLine(String.valueOf(propPosition));
-            telemetry.update();
-        }
+
 
         propPosition = propProcessor.getPropPlacement();
         telemetry.addData("Prop", propPosition);
-
         telemetry.update();
-        waitForStart();
 
-//        autonomusPurple(propPosition);
-//        autonomusYellow(currentAliance, propPosition);
+        waitForStart();
+        telemetry.addData("Prop", propPosition);
+        telemetry.update();
+        sleep(1000);
+
+        if (propPosition == 1){
+            telemetry.addData("moving",1);
+            telemetry.update();
+            sleep(1000);
+            wheels.driveRight(32, 0.5);
+            wheels.driveForward(60,0.5);
+        }
+        else if (propPosition == 3){
+            telemetry.addData("moving",3);
+            telemetry.update();
+            sleep(1000);
+            wheels.driveLeft(32,0.5);
+            wheels.driveForward(60,0.5);
+
+        }
+        else {
+            telemetry.addData("moving",2);
+            telemetry.update();
+            sleep(1000);
+            wheels.driveForward(90, 0.5);
+            wheels.driveBackword(13,0.5);
+        }
+        claw.closeClawLeft();
+        claw.closeClawRight();
+        arm.midArm();
+        sleep(300);
+        wheels.driveBackword(20,0.5);
+        arm.closeArm();
+        sleep(500);
+//
     }
 }
