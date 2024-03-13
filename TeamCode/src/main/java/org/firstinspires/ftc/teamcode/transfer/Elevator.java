@@ -43,15 +43,25 @@ public class Elevator {
         opMode.telemetry.addData("Motor Power", String.valueOf(leftElevatorMotor.getPower()));
     }
     public void climb(){
+
+        leftElevatorMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightElevatorMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftElevatorMotor.setTargetPosition(0);
+        rightElevatorMotor.setTargetPosition(0);
         while (opMode.opModeIsActive()){
-            leftElevatorMotor.setTargetPosition(0);
-            rightElevatorMotor.setTargetPosition(0);
             rightElevatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             leftElevatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             leftElevatorMotor.setPower(-1);
             rightElevatorMotor.setPower(-1);
 
         }
+    }
+    public void elevatorUp(int ticks){
+        leftElevatorMotor.setTargetPosition(ticks);
+        rightElevatorMotor.setTargetPosition(ticks);
+        rightElevatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftElevatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
     }
     public void stopElevator(){
 
