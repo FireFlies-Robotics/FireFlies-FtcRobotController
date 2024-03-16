@@ -60,6 +60,7 @@ public class BlueClose extends LinearOpMode {
         claw.closeClawRight();
         claw.closeClawLeft();
 
+        int originalPos = targetTagId;
         if (currentAliance == aliance.RED) {
             targetTagId += 3;
         }
@@ -117,9 +118,11 @@ public class BlueClose extends LinearOpMode {
             claw.openClawRight();
         }
 
+        sleep(100);
+
         wheels.driveBackword(10, 0.5);
-        wheels.driveLeft(65 + 24*(targetTagId - minId), 0.5);
-        wheels.driveForward(10,1);
+        wheels.driveLeft(65 + 24*(originalPos - 2), 0.5);
+        wheels.driveForward(40,1);
     }
 
     int targetTagId = 3;

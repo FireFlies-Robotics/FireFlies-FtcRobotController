@@ -25,11 +25,9 @@ public class Wheels {
     private final DcMotor backLeft;
     private final DcMotor backRight;
 
-    final double kPAngle = -.02;
-    final double kPDrive = .007;
-
-    PID pidDrive = new PID(.007,0,0,0);
-    final PID pidAngle = new PID(.03,0,0,0);
+    PID pidDriveY = new PID(.007,0.01,0,0);
+    PID pidDriveX = new PID(.007,0.005,0,0);
+    final PID pidAngle = new PID(.03,0.005,0,0);
     private final LinearOpMode opMode; // The opmode used to get the wheels
     private final IMU imu; // Gyros used to get the robots rotation
 
@@ -46,7 +44,8 @@ public class Wheels {
     public Wheels(LinearOpMode opMode, IMU imu) {
         this.opMode = opMode;
         this.imu = imu;
-        pidDrive.setTolerance(1);
+        pidDriveY.setTolerance(2);
+        pidDriveX.setTolerance(2);
         pidAngle.setTolerance(2);
         // Getting the wheel motors and setting them up
 
@@ -132,26 +131,35 @@ public class Wheels {
         return autoAdjust(tags, -1, targetYaw, targetRange);
     }
 
-    public boolean autoAdjust(ArrayList<AprilTagDetection> tags, int targetId, double targetYaw, double targetRange) {
+    public boolean autoAdjust(ArrayList<AprilTagDetection> tags, int targetId, double targetYaw, double targetY) {
         int minId = -1;
-        double minRange = 0;
+        double minY = 0;
         double yaw = 0;
+        double minX = 0;
         int aprilTagCount = 0;
         ArrayList<Integer> tagsFound = new ArrayList<>();
 
         for (AprilTagDetection tag : tags) {
-            double range = tag.ftcPose.range * 2.54;
+            double y = tag.ftcPose.y * 2.54;
+            double x = tag.ftcPose.x * 2.54;
             aprilTagCount++;
             tagsFound.add(tag.id);
 
             if (minId == -1) {
                 minId = tag.id;
-                minRange = range;
+                minY = y;
                 yaw = tag.ftcPose.yaw;
-            } else if (minRange > range) {
+                minX = x;
+            } else if (tag.id == targetId) {
                 minId = tag.id;
-                minRange = range;
+                minY = y;
                 yaw = tag.ftcPose.yaw;
+                minX = x;
+            } else if (minY > y && minId != targetId) {
+                minId = tag.id;
+                minY = y;
+                yaw = tag.ftcPose.yaw;
+                minX = x;
             }
         }
 
@@ -163,17 +171,20 @@ public class Wheels {
         opMode.telemetry.addData("Tags Found", tagsFoundStr.toString());
 
         if (minId == -1) return false;
-        double driveSpeed = -pidDrive.calculate(minRange, targetRange);
+        double driveSpeedY = -pidDriveY.calculate(minY, targetY);
+        double driveSpeedX = pidDriveX.calculate(minX, 0);
         double rotationSpeed = pidAngle.calculate(yaw,targetYaw);
-        driveRobotOriented(0, driveSpeed, rotationSpeed);
-        boolean returnCondition = (pidDrive.atSetPoint() && pidAngle.atSetPoint());
+        driveRobotOriented(driveSpeedX, driveSpeedY, rotationSpeed);
+        boolean returnCondition = (pidDriveY.atSetPoint() && pidDriveX.atSetPoint() && pidAngle.atSetPoint());
 
         opMode.telemetry.addData("Yaw", yaw);
-        opMode.telemetry.addData("Range", minRange);
-        opMode.telemetry.addData("Range Difference", targetRange- minRange);
+        opMode.telemetry.addData("Y", minY);
+        opMode.telemetry.addData("X", minX);
+        opMode.telemetry.addData("Y Difference", targetY - minY);
+        opMode.telemetry.addData("X Difference", -minX);
         opMode.telemetry.addData("Yaw Difference", Math.abs(yaw-targetYaw));
         opMode.telemetry.addData("April Tags", aprilTagCount);
-        opMode.telemetry.addData("Drive Speed", driveSpeed);
+        opMode.telemetry.addData("Drive Speed", driveSpeedY);
         opMode.telemetry.addData("Drive Rotation", rotationSpeed);
 
         return returnCondition;
@@ -190,7 +201,7 @@ public class Wheels {
         backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
-    public  void stop(){
+    public void stop(){
         frontLeft.setPower(0);
         frontRight.setPower(0);
         backLeft.setPower(0);
@@ -202,7 +213,7 @@ public class Wheels {
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public  void rotateByEncoder(double degrees, double power){
+    public void rotateByEncoder(double degrees, double power){
         double toPosition = degrees/360 * TICKS_PER_ROTATION;
         driveWheelToPosition(frontRight,power, -toPosition);
         driveWheelToPosition(frontLeft,power, toPosition);
