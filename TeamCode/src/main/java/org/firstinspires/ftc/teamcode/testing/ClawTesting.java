@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.transfer.Claw;
 
 @TeleOp(name="ClawTesting", group="Linear OpMode")
-    @Disabled
+@Disabled
     public class ClawTesting extends LinearOpMode {
         Claw claw;
         // Declare OpMode members.

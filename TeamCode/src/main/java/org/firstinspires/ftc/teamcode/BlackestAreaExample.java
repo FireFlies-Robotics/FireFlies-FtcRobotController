@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -18,6 +19,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
  * This example uses OpenCV to determine the blackest area in the camera frame and
  * displays "right," "middle," or "left" based on that.
  */
+@Disabled
 @TeleOp
 public class BlackestAreaExample extends LinearOpMode {
     OpenCvCamera phoneCam;

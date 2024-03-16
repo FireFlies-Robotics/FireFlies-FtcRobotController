@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -19,7 +21,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.ArrayList;
 
-@Autonomous(name = "this one", group = "Autonomous")
+@Autonomous(name = "Blue Close Autonomous", group = "Autonomous")
 public class BlueClose extends LinearOpMode {
     enum aliance{
         RED, BLUE;
@@ -39,7 +41,7 @@ public class BlueClose extends LinearOpMode {
     AprilTagProcessor aprilProcessor;
     int propPosition = 3;
 
-    ElapsedTime timeer =  new ElapsedTime();
+    ElapsedTime timer =  new ElapsedTime();
     public void autonomusPurple(int propPosition){
 
         if (propPosition == 1){
@@ -55,6 +57,9 @@ public class BlueClose extends LinearOpMode {
     }
 
     public void autonomusYellow(aliance currentAliance, int targetTagId){
+        claw.closeClawRight();
+        claw.closeClawLeft();
+
         if (currentAliance == aliance.RED) {
             targetTagId += 3;
         }
@@ -72,22 +77,19 @@ public class BlueClose extends LinearOpMode {
 
         wheels.driveForward(60, .5);
 
-
-
         boolean arivedToPosition = false;
         while (!arivedToPosition && opModeIsActive() && !isStopRequested()) {
             ArrayList<AprilTagDetection> detections = aprilProcessor.getDetections();
-
+            telemetry.addData("detections size ", detections.size());
             if (detections.size() > 0) {
                 arivedToPosition = wheels.autoAdjust(detections, 0, 20);
-            } else if (timeer.seconds() < 20){
+            } else if (timer.seconds() < 20){
                 wheels.driveRobotOriented(0, .3, 0);
                 telemetry.addData("not seeing tags","");
-                telemetry.update();
+            } else {
+                break;
             }
-            else {
-                arivedToPosition = true;
-            }
+            telemetry.update();
         }
         telemetry.addLine("Arrived to position");
 
@@ -116,13 +118,15 @@ public class BlueClose extends LinearOpMode {
         }
 
         wheels.driveBackword(10, 0.5);
-        wheels.driveLeft(65, 0.5);
+        wheels.driveLeft(65 + 24*(targetTagId - minId), 0.5);
         wheels.driveForward(10,1);
     }
 
     int targetTagId = 3;
     @Override
     public void runOpMode() throws InterruptedException {
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
         // Retrieve the IMU from the hardware map
         imu = hardwareMap.get(IMU.class, "imu");
         // Adjust the orientation parameters to match your robot
@@ -144,13 +148,14 @@ public class BlueClose extends LinearOpMode {
 
         portal = VisionPortal.easyCreateWithDefaults(
                 webcamName, aprilProcessor);
+        FtcDashboard.getInstance().startCameraStream(portal, 0);
 
         propPosition = propProcessor.getPropPlacement();
         telemetry.addData("Prop", propPosition);
         telemetry.update();
 
         waitForStart();
-        timeer.reset();
+        timer.reset();
         telemetry.addData("Prop", propPosition);
         telemetry.update();
 

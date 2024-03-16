@@ -28,8 +28,8 @@ public class Wheels {
     final double kPAngle = -.02;
     final double kPDrive = .007;
 
-    PID pidDrive = new PID(.09,0,0,0);
-    final PID pidAngle = new PID(.02,0,0,0);
+    PID pidDrive = new PID(.007,0,0,0);
+    final PID pidAngle = new PID(.03,0,0,0);
     private final LinearOpMode opMode; // The opmode used to get the wheels
     private final IMU imu; // Gyros used to get the robots rotation
 
@@ -129,15 +129,20 @@ public class Wheels {
     }
 
     public boolean autoAdjust(ArrayList<AprilTagDetection> tags, double targetYaw, double targetRange) {
+        return autoAdjust(tags, -1, targetYaw, targetRange);
+    }
+
+    public boolean autoAdjust(ArrayList<AprilTagDetection> tags, int targetId, double targetYaw, double targetRange) {
         int minId = -1;
         double minRange = 0;
         double yaw = 0;
         int aprilTagCount = 0;
+        ArrayList<Integer> tagsFound = new ArrayList<>();
 
         for (AprilTagDetection tag : tags) {
             double range = tag.ftcPose.range * 2.54;
             aprilTagCount++;
-            opMode.telemetry.addLine("Found tag " + tag.id);
+            tagsFound.add(tag.id);
 
             if (minId == -1) {
                 minId = tag.id;
@@ -149,6 +154,13 @@ public class Wheels {
                 yaw = tag.ftcPose.yaw;
             }
         }
+
+        StringBuilder tagsFoundStr = new StringBuilder();
+        for (int id : tagsFound) {
+            tagsFoundStr.append(id).append(", ");
+        }
+
+        opMode.telemetry.addData("Tags Found", tagsFoundStr.toString());
 
         if (minId == -1) return false;
         double driveSpeed = -pidDrive.calculate(minRange, targetRange);
@@ -163,7 +175,6 @@ public class Wheels {
         opMode.telemetry.addData("April Tags", aprilTagCount);
         opMode.telemetry.addData("Drive Speed", driveSpeed);
         opMode.telemetry.addData("Drive Rotation", rotationSpeed);
-        opMode.telemetry.update();
 
         return returnCondition;
     }

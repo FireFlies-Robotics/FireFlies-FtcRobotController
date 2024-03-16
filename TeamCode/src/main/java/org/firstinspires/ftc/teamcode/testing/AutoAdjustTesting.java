@@ -23,7 +23,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 
 @TeleOp(name="Linear OpMode", group="Linear OpMode")
 //Uncomment the line below to disable this op
-//@Disabled
+@Disabled
 public class AutoAdjustTesting extends LinearOpMode {
     // Declare variables you will be using throughout this class here
 

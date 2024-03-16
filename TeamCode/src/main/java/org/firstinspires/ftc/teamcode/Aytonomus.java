@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -15,15 +16,11 @@ import org.firstinspires.ftc.teamcode.transfer.Intake;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
+@Disabled
 public class Aytonomus {
-
-
-
-
-
     @Autonomous(name="Autonomous", group="Linear OpMode")
 //Uncomment the line below to disable this op
-//@Disabled
+@Disabled
     public class MainOpMode extends LinearOpMode {
         // Declare variables you will be using throughout this class here
 
