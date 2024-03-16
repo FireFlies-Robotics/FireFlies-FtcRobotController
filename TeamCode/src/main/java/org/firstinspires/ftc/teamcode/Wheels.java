@@ -28,7 +28,7 @@ public class Wheels {
     final double kPAngle = -.02;
     final double kPDrive = .007;
 
-    PID pidDrive = new PID(.007,0,0,0);
+    PID pidDrive = new PID(.09,0,0,0);
     final PID pidAngle = new PID(.02,0,0,0);
     private final LinearOpMode opMode; // The opmode used to get the wheels
     private final IMU imu; // Gyros used to get the robots rotation
@@ -151,14 +151,14 @@ public class Wheels {
         }
 
         if (minId == -1) return false;
-        double driveSpeed = pidDrive.calculate(minRange, targetRange);
+        double driveSpeed = -pidDrive.calculate(minRange, targetRange);
         double rotationSpeed = pidAngle.calculate(yaw,targetYaw);
         driveRobotOriented(0, driveSpeed, rotationSpeed);
         boolean returnCondition = (pidDrive.atSetPoint() && pidAngle.atSetPoint());
 
         opMode.telemetry.addData("Yaw", yaw);
         opMode.telemetry.addData("Range", minRange);
-        opMode.telemetry.addData("Range Difference", minRange - targetRange);
+        opMode.telemetry.addData("Range Difference", targetRange- minRange);
         opMode.telemetry.addData("Yaw Difference", Math.abs(yaw-targetYaw));
         opMode.telemetry.addData("April Tags", aprilTagCount);
         opMode.telemetry.addData("Drive Speed", driveSpeed);

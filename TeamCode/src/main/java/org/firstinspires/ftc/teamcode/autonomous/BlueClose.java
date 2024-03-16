@@ -4,6 +4,7 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Wheels;
@@ -35,9 +36,10 @@ public class BlueClose extends LinearOpMode {
     ExampleProcessor propProcessor;
 
     VisionPortal portal;
-    AprilTagProcessor processor;
+    AprilTagProcessor aprilProcessor;
     int propPosition = 3;
 
+    ElapsedTime timeer =  new ElapsedTime();
     public void autonomusPurple(int propPosition){
 
         if (propPosition == 1){
@@ -60,7 +62,7 @@ public class BlueClose extends LinearOpMode {
 
         if (aliance.BLUE == currentAliance) {
             wheels.rotateByEncoder(-90, .5);
-        } else {
+        } else  {
             wheels.rotateByEncoder(90, .5);
         }
 
@@ -70,18 +72,21 @@ public class BlueClose extends LinearOpMode {
 
         wheels.driveForward(60, .5);
 
-        while (processor.getDetections().size() == 0 && opModeIsActive() && !isStopRequested())  {
-            wheels.driveRobotOriented(0, .3, 0);
-        }
+
 
         boolean arivedToPosition = false;
         while (!arivedToPosition && opModeIsActive() && !isStopRequested()) {
-            ArrayList<AprilTagDetection> detections = processor.getDetections();
+            ArrayList<AprilTagDetection> detections = aprilProcessor.getDetections();
 
             if (detections.size() > 0) {
                 arivedToPosition = wheels.autoAdjust(detections, 0, 20);
-            } else {
-                wheels.driveRobotOriented(0, 0, 0);
+            } else if (timeer.seconds() < 20){
+                wheels.driveRobotOriented(0, .3, 0);
+                telemetry.addData("not seeing tags","");
+                telemetry.update();
+            }
+            else {
+                arivedToPosition = true;
             }
         }
         telemetry.addLine("Arrived to position");
@@ -89,7 +94,7 @@ public class BlueClose extends LinearOpMode {
         int minId = -1;
         double minRange = 0;
 
-        for (AprilTagDetection tag : processor.getDetections()) {
+        for (AprilTagDetection tag : aprilProcessor.getDetections()) {
             double range = tag.ftcPose.range * 2.54;
 
             if (minId == -1) {
@@ -134,52 +139,53 @@ public class BlueClose extends LinearOpMode {
         intake = new Intake(this); intake.initIntake();
 
         WebcamName webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
-        processor = AprilTagProcessor.easyCreateWithDefaults();
+        aprilProcessor = AprilTagProcessor.easyCreateWithDefaults();
         propProcessor = new ExampleProcessor(telemetry, 2);
 
         portal = VisionPortal.easyCreateWithDefaults(
-                webcamName, propProcessor);
-
-
+                webcamName, aprilProcessor);
 
         propPosition = propProcessor.getPropPlacement();
         telemetry.addData("Prop", propPosition);
         telemetry.update();
 
         waitForStart();
+        timeer.reset();
         telemetry.addData("Prop", propPosition);
         telemetry.update();
-        sleep(1000);
 
-        if (propPosition == 1){
-            telemetry.addData("moving",1);
-            telemetry.update();
-            sleep(1000);
-            wheels.driveRight(32, 0.5);
-            wheels.driveForward(60,0.5);
-        }
-        else if (propPosition == 3){
-            telemetry.addData("moving",3);
-            telemetry.update();
-            sleep(1000);
-            wheels.driveLeft(32,0.5);
-            wheels.driveForward(60,0.5);
+        propPosition = 3;
+        autonomusYellow(currentAliance, propPosition);
 
-        }
-        else {
-            telemetry.addData("moving",2);
-            telemetry.update();
-            sleep(1000);
-            wheels.driveForward(90, 0.5);
-            wheels.driveBackword(13,0.5);
-        }
-        claw.closeClawLeft();
-        claw.closeClawRight();
-        arm.midArm();
-        sleep(300);
-        wheels.driveBackword(20,0.5);
-        arm.closeArm();
-        sleep(500);
+//        if (propPosition == 1){
+//            telemetry.addData("moving",1);
+//            telemetry.update();
+//            sleep(1000);
+//            wheels.driveRight(32, 0.5);
+//            wheels.driveForward(60,0.5);
+//        }
+//        else if (propPosition == 3){
+//            telemetry.addData("moving",3);
+//            telemetry.update();
+//            sleep(1000);
+//            wheels.driveLeft(32,0.5);
+//            wheels.driveForward(60,0.5);
+//
+//        }
+//        else {
+//            telemetry.addData("moving",2);
+//            telemetry.update();
+//            sleep(1000);
+//            wheels.driveForward(90, 0.5);
+//            wheels.driveBackword(13,0.5);
+//        }
+//        claw.closeClawLeft();
+//        claw.closeClawRight();
+//        arm.midArm();
+//        sleep(300);
+//        wheels.driveBackword(20,0.5);
+//        arm.closeArm();
+//        sleep(500);
 //
     }
 }

@@ -73,7 +73,7 @@ public class ExampleProcessor implements VisionProcessor {
             propPlacement = 3;
             telemetry.addLine("RIGHT");
         }
-
+         telemetry.update();
         return frame;
     }
 
