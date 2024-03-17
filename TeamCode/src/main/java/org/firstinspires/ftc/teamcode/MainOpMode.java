@@ -54,7 +54,6 @@ public class MainOpMode extends LinearOpMode {
         elevator.initElevator();
         intake.initIntake();
 
-
         WebcamName webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
 
         processor = AprilTagProcessor.easyCreateWithDefaults();

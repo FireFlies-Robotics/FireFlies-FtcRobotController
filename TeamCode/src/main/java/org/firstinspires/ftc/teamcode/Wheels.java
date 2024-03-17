@@ -25,9 +25,9 @@ public class Wheels {
     private final DcMotor backLeft;
     private final DcMotor backRight;
 
-    PID pidDriveY = new PID(.007,0.01,0,0);
-    PID pidDriveX = new PID(.007,0.005,0,0);
-    final PID pidAngle = new PID(.03,0.005,0,0);
+    PID pidDriveY = new PID(.007,0.01,0.01,0);
+    PID pidDriveX = new PID(.007,0.005,0.01,0);
+    final PID pidAngle = new PID(.03,0.005,0.01,0);
     private final LinearOpMode opMode; // The opmode used to get the wheels
     private final IMU imu; // Gyros used to get the robots rotation
 
@@ -145,17 +145,18 @@ public class Wheels {
             aprilTagCount++;
             tagsFound.add(tag.id);
 
-            if (minId == -1) {
+            if (tag.id == targetId) {
                 minId = tag.id;
                 minY = y;
                 yaw = tag.ftcPose.yaw;
                 minX = x;
-            } else if (tag.id == targetId) {
+                break;
+            } else if (minId == -1) {
                 minId = tag.id;
                 minY = y;
                 yaw = tag.ftcPose.yaw;
                 minX = x;
-            } else if (minY > y && minId != targetId) {
+            } else if (minY > y) {
                 minId = tag.id;
                 minY = y;
                 yaw = tag.ftcPose.yaw;
@@ -169,6 +170,7 @@ public class Wheels {
         }
 
         opMode.telemetry.addData("Tags Found", tagsFoundStr.toString());
+        opMode.telemetry.addData("Locating Based on", minId);
 
         if (minId == -1) return false;
         double driveSpeedY = -pidDriveY.calculate(minY, targetY);

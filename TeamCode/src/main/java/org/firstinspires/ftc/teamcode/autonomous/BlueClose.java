@@ -76,14 +76,14 @@ public class BlueClose extends LinearOpMode {
             arm.openArm();
         }
 
-        wheels.driveForward(60, .5);
+//        wheels.driveForward(60, .5);
 
         boolean arivedToPosition = false;
         while (!arivedToPosition && opModeIsActive() && !isStopRequested()) {
             ArrayList<AprilTagDetection> detections = aprilProcessor.getDetections();
             telemetry.addData("detections size ", detections.size());
             if (detections.size() > 0) {
-                arivedToPosition = wheels.autoAdjust(detections, 0, 20);
+                arivedToPosition = wheels.autoAdjust(detections, targetTagId, 0, 20);
             } else if (timer.seconds() < 20){
                 wheels.driveRobotOriented(0, .3, 0);
                 telemetry.addData("not seeing tags","");
@@ -155,6 +155,14 @@ public class BlueClose extends LinearOpMode {
 
         propPosition = propProcessor.getPropPlacement();
         telemetry.addData("Prop", propPosition);
+        telemetry.update();
+
+        telemetry.addData("Yaw", 0);
+        telemetry.addData("Y", 0);
+        telemetry.addData("X", 0);
+        telemetry.addData("Y Difference", 0);
+        telemetry.addData("X Difference", 0);
+        telemetry.addData("Yaw Difference", 0);
         telemetry.update();
 
         waitForStart();
