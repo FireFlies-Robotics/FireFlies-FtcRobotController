@@ -150,7 +150,7 @@ public class MainOpMode extends LinearOpMode {
             // Move robot by controller 1
             if ( !isStopRequested() && opModeIsActive()) {
                 if (gamepad1.share){
-                    wheels.autoAdjust(processor.getDetections(), 0, 20);
+                  //  wheels.autoAdjust(processor.getDetections(), 0, 20);
                 }
                 else {
                     wheels.driveByJoystickFieldOriented(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);

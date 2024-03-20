@@ -126,12 +126,12 @@ public class Wheels {
         opMode.telemetry.addData("FrontRightPower", frontRightPower);
         opMode.telemetry.addData("BackRightPower", backRightPower);
     }
+//
+//    public boolean autoAdjust(ArrayList<AprilTagDetection> tags, double targetYaw, double targetRange) {
+//        return autoAdjust(tags, -1, targetYaw, targetRange);
+//    }
 
-    public boolean autoAdjust(ArrayList<AprilTagDetection> tags, double targetYaw, double targetRange) {
-        return autoAdjust(tags, -1, targetYaw, targetRange);
-    }
-
-    public boolean autoAdjust(ArrayList<AprilTagDetection> tags, int targetId, double targetYaw, double targetY) {
+    public boolean autoAdjust(ArrayList<AprilTagDetection> tags, int targetId, double targetYaw, double targetY, double targetX) {
         int minId = -1;
         double minY = 0;
         double yaw = 0;

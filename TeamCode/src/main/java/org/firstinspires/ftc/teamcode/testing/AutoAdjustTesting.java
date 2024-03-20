@@ -156,7 +156,7 @@ public class AutoAdjustTesting extends LinearOpMode {
             }
 
             if (gamepad1.share) {
-                wheels.autoAdjust(processor.getDetections(), 0, 2);
+            //    wheels.autoAdjust(processor.getDetections(), 0, 2);
             }
             // Show data on driver station
             telemetry.addData("Status", "Run Time: " + runtime.toString());
