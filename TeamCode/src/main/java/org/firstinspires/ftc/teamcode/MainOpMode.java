@@ -36,6 +36,7 @@ public class MainOpMode extends LinearOpMode {
     Elevator elevator;
     Intake intake;
 
+    AirPlane airPlane;
     Wheels wheels; // Declare the wheels class to control the wheels
 
     IMU imu; // Declare class for getting robot angles
@@ -49,11 +50,12 @@ public class MainOpMode extends LinearOpMode {
         claw = new Claw(this);
         intake = new Intake(this);
         elevator = new Elevator(this);
+        airPlane = new AirPlane(this);
         arm.initArm();
         claw.initClaw();
         elevator.initElevator();
         intake.initIntake();
-
+        airPlane.initAirPkane();
         WebcamName webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
 
         processor = AprilTagProcessor.easyCreateWithDefaults();
@@ -155,6 +157,9 @@ public class MainOpMode extends LinearOpMode {
                 else {
                     wheels.driveByJoystickFieldOriented(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
                 }
+            }
+            if (gamepad1.touchpad){
+                airPlane.lunchAirPlane();
             }
             // Show data on driver station
             telemetry.addData("Status", "Run Time: " + runtime.toString());

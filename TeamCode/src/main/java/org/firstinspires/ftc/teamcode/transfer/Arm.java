@@ -8,8 +8,7 @@ public class Arm {
 
     private Servo rightArmServo;
     private Servo leftArmServo;
-    public Arm(LinearOpMode opMode) {
-        this.opMode = opMode;
+    public Arm(LinearOpMode opMode) {this.opMode = opMode;
     }
 
     final private double ARM_CLOSED_POSITION = .11 ;

@@ -72,17 +72,21 @@ public class MainAutonomus {
         wheels.driveForward(75, 0.5);
         if( propPosition == 1 && !opMode.isStopRequested()){
             wheels.rotateByEncoder(-90,0.4);
-            wheels.driveForward(20,0.5);
-            wheels.driveBackword(5,0.5);
+            wheels.driveForward(30,0.5);
+            wheels.driveBackword(19,0.5);
         }
         else if(propPosition == 3 && !opMode.isStopRequested()){
             wheels.rotateByEncoder(90, 0.4);
+            wheels.driveRight(5,0.4);
+            wheels.driveForward(30,0.5);
+            wheels.driveBackword(15,0.5);
+        }
+        else {
             wheels.driveForward(20,0.5);
-            wheels.driveBackword(5,0.5);
+            wheels.driveBackword(18,0.5);
         }
 
-
-
+        claw.closeClawRight();
         arm.midArm();
         opMode.sleep(1000);
         arm.closeArm();
