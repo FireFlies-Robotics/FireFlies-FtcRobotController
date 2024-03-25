@@ -158,7 +158,7 @@ public class MainOpMode extends LinearOpMode {
                     wheels.driveByJoystickFieldOriented(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
                 }
             }
-            if (gamepad1.touchpad){
+            if (gamepad1.dpad_up){
                 airPlane.lunchAirPlane();
             }
             // Show data on driver station

@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 @Autonomous
-public class BluePurplePixel extends LinearOpMode {
+public class BluePurpleYellow extends LinearOpMode {
 
 
     MainAutonomus mainAutonomus;
@@ -13,5 +13,6 @@ public class BluePurplePixel extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         mainAutonomus = new MainAutonomus(false,this );
         mainAutonomus.runPeuple();
+        mainAutonomus.blueYellowPixel();
     }
 }
