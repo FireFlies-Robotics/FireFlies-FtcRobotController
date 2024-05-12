@@ -31,11 +31,23 @@ public class FollowExample extends LinearOpMode {
         while (opModeIsActive()) {
             ArrayList<AprilTagDetection> tags = tagProcessor.getDetections();
 
+            if (tags.size() == 0) wheels.driveRobotOriented(0, 0, 0);
+           // wheels.driveRobotOriented(0, 1, 0);
+
+
             for (AprilTagDetection tag : tags) {
                 double xPos = tag.ftcPose.x;
 
-                if (Math.abs(xPos) < .5)
-                    wheels.driveRobotOriented(0, 0, xPos);
+
+                if (xPos < -.2)
+                    wheels.driveRobotOriented(0, 0, -0.5);
+                else if (xPos > .2)
+                    wheels.driveRobotOriented(0, 0, 0.5);
+                else
+                    wheels.driveRobotOriented(0, 0, 0);
+
+                telemetry.addData("X Pos", xPos);
+                telemetry.update();
             }
         }
 
