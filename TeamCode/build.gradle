@@ -25,6 +25,8 @@ android {
 
 dependencies {
     implementation project(':FtcRobotController')
+    implementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+    implementation 'org.junit.jupiter:junit-jupiter:5.8.1'
     annotationProcessor files('lib/OpModeAnnotationProcessor.jar')
 
     // Road Runner
