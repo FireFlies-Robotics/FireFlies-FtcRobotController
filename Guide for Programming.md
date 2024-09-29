@@ -13,17 +13,17 @@ Please follow these steps whenever starting a coding session:
 3. Push updates at the end of every session
 
 Follow this rules additionally:
-* **Never work directly in master** or a category branch
+* ~~**Never work directly in master** or a category branch~~
 * Make your own branches, **never work in somebody else's branch**
 
 ### Merging Branches
 Merging branches is a critical action. **Please follow this steps before merging**:
 1. Merge the root branch into your feature branch
 2. Take a look over your code. check that it qualifies for [Writing Code](#writing-code), [Naming Variables, Classes and Methods](#naming-variables-classes-and-methods-functions), [Writing Comments](#writing-comments) and [Testing](#testing)
-3. Test your code and **make sure it runs flawlessly**
-4. Merge your feature branch into its root branch
+3. Merge your feature branch into its root branch
+4. Test your code and **make sure it runs flawlessly**
 5. Push the root branch to github
-6. **Delete your feature branch after two meetings**
+6. ~~**Delete your feature branch after two meetings**~~
 
 **Please merge branches with caution**
 
@@ -34,6 +34,7 @@ To make sure that we all can understand each others code, please follow [the gui
 ### Naming Variables, Classes and Methods (functions)
 
 Naming variables, classes and methods in a way that everyone can understand is crucial. Please use this guidelines to ensure that:
+* Variable names should be obvious to anyone reading your code
 * Always avoid using initials (even if the name is long)
 * Use lowerCamelCase for dynamic variables and methods
 * Use UpperCamelCase for classes
@@ -84,7 +85,7 @@ System.out.println("Imported usernames from file");
 Testing your code is crucial to make sure that your can integrate well with other code and not having bugs on the stage.
 
 Follow this rules to ensure that and prevent conflicts:
-* Make your own OpModes, **never work in the main OpMode**
+* Make testing OpModes under the testing folder, **never work in the main OpMode** (unless this is what you are working on)
 * Check every functionality of your code. Your code is being used not only by you
 
 ### ___*If you want to suggest a change in the guidelines, please suggest it during a meeting___
